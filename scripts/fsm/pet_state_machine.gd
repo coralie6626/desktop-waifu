@@ -9,6 +9,7 @@ const IDLE := &"Idle"
 const WANDER := &"Wander"
 const DRAGGED := &"Dragged"
 const SITTING := &"Sitting"
+const PERCHED := &"Perched"
 
 @export var initial_state: PetState
 

@@ -14,6 +14,12 @@ signal animation_finished(anim: StringName)
 ## Used for the fall after being dropped mid-screen (px/s²).
 @export var gravity := 2400.0
 
+@export_group("Perching")
+## Dropped with the feet up to this many px below a window's top edge still lands on it.
+@export var perch_reach := 24.0
+## Minimum title bar left on each side of the feet for her to sit there.
+@export var perch_margin := 12.0
+
 @export_group("Dialogue")
 @export var idle_lines: PackedStringArray = [
 	"Hi there!",
@@ -44,6 +50,7 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var bubble: SpeechBubble = $SpeechBubble
 @onready var context_menu: PopupMenu = $ContextMenu
 @onready var state_machine: PetStateMachine = $StateMachine
+@onready var window_tracker: WindowTracker = $WindowTracker
 
 
 func _ready() -> void:
@@ -146,6 +153,17 @@ func contains_point(point: Vector2) -> bool:
 
 func is_near_floor() -> bool:
 	return floor_y - position.y <= sit_snap_distance
+
+
+## The title bar she'd land on if let go now (see WindowTracker.find_landing), or {}.
+func find_perch() -> Dictionary:
+	return window_tracker.find_landing(position, perch_reach, perch_top_range(), perch_margin)
+
+
+## (min, max) y a window's top edge may have for her to sit on it: low enough that she
+## fits on screen above it, and not so close to the taskbar that the floor would do.
+func perch_top_range() -> Vector2:
+	return Vector2(bounds.position.y + get_hit_rect().size.y, floor_y - perch_reach)
 
 
 ## Keeps the whole sprite on screen and never below the taskbar.
