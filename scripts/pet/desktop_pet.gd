@@ -26,7 +26,7 @@ signal animation_finished(anim: StringName)
 
 @export_group("Animation")
 ## Size of the clickable box, measured up from the feet (unscaled skeleton units).
-@export var hit_size := Vector2(84, 158)
+@export var hit_size := Vector2(92, 176)
 ## Animations that play once and emit animation_finished; everything else loops.
 @export var one_shot_anims: Array[StringName] = [&"idle_action"]
 

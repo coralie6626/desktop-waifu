@@ -1,20 +1,26 @@
 waifu.png
-size: 256,256
+size: 512,256
 filter: Linear,Linear
 pma: false
 hair_back
-bounds: 0,0,88,92
+bounds: 0,0,92,110
 head
-bounds: 90,0,80,76
+bounds: 94,0,84,80
+ear
+bounds: 180,0,26,34
+flower
+bounds: 208,0,34,40
 torso
-bounds: 172,0,44,48
+bounds: 244,0,44,46
 skirt
-bounds: 0,94,64,32
+bounds: 290,0,72,40
 arm
-bounds: 66,94,16,40
+bounds: 364,0,16,40
 leg
-bounds: 84,94,16,38
+bounds: 382,0,16,38
 eyes
-bounds: 102,94,44,16
+bounds: 400,0,48,20
 eyes_closed
-bounds: 148,94,44,10
+bounds: 450,0,48,10
+tail
+bounds: 0,112,30,44
