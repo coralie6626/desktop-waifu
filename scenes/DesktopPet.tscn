@@ -1,0 +1,115 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/pet/desktop_pet.gd" id="1_pet"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+[ext_resource type="Script" path="res://scripts/ui/speech_bubble.gd" id="3_bubble"]
+[ext_resource type="Script" path="res://scripts/fsm/pet_state_machine.gd" id="4_fsm"]
+[ext_resource type="Script" path="res://scripts/fsm/states/idle_state.gd" id="5_idle"]
+[ext_resource type="Script" path="res://scripts/fsm/states/wander_state.gd" id="6_wander"]
+[ext_resource type="Script" path="res://scripts/fsm/states/dragged_state.gd" id="7_dragged"]
+[ext_resource type="Script" path="res://scripts/fsm/states/sitting_state.gd" id="8_sitting"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pet"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_icon")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_icon")
+}],
+"loop": false,
+"name": &"idle_action",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_icon")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_icon")
+}],
+"loop": true,
+"name": &"drag",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_icon")
+}],
+"loop": true,
+"name": &"sit",
+"speed": 5.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(1, 1, 1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.2, 0.3, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="DesktopPet" type="Node2D"]
+script = ExtResource("1_pet")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -64)
+sprite_frames = SubResource("SpriteFrames_pet")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="SpeechBubble" type="PanelContainer" parent="."]
+visible = false
+z_index = 10
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bubble")
+script = ExtResource("3_bubble")
+
+[node name="Label" type="Label" parent="SpeechBubble"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.12, 0.2, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HideTimer" type="Timer" parent="SpeechBubble"]
+one_shot = true
+
+[node name="ContextMenu" type="PopupMenu" parent="."]
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_fsm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_idle")
+
+[node name="Wander" type="Node" parent="StateMachine"]
+script = ExtResource("6_wander")
+
+[node name="Dragged" type="Node" parent="StateMachine"]
+script = ExtResource("7_dragged")
+
+[node name="Sitting" type="Node" parent="StateMachine"]
+script = ExtResource("8_sitting")
