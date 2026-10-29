@@ -1,8 +1,11 @@
 class_name DesktopPet
 extends Node2D
-## The pet: owns the sprite, speech bubble, context menu and state machine.
+## The pet: owns the Spine sprite, speech bubble, context menu and state machine.
 ## The node's origin is at the character's FEET (bottom-centre), so standing on the
 ## taskbar simply means `position.y == floor_y`.
+
+## Emitted when a one-shot animation (see one_shot_anims) reaches its end.
+signal animation_finished(anim: StringName)
 
 @export_group("Movement")
 @export var walk_speed := 90.0
@@ -21,6 +24,12 @@ extends Node2D
 ]
 @export var grab_lines: PackedStringArray = ["Hey!", "Wheee~", "Put me down!"]
 
+@export_group("Animation")
+## Size of the clickable box, measured up from the feet (unscaled skeleton units).
+@export var hit_size := Vector2(84, 158)
+## Animations that play once and emit animation_finished; everything else loops.
+@export var one_shot_anims: Array[StringName] = [&"idle_action"]
+
 enum MenuId { TALK, SIT, QUIT }
 
 ## Area the pet lives in, in window coordinates. Its bottom edge is the taskbar's top edge.
@@ -29,13 +38,18 @@ var floor_y: float:
 	get:
 		return bounds.end.y
 
-@onready var sprite: AnimatedSprite2D = $Sprite
+var _anim_names: Dictionary[StringName, bool] = {}
+
+@onready var sprite: SpineSprite = $Sprite
 @onready var bubble: SpeechBubble = $SpeechBubble
 @onready var context_menu: PopupMenu = $ContextMenu
 @onready var state_machine: PetStateMachine = $StateMachine
 
 
 func _ready() -> void:
+	for anim: SpineAnimation in sprite.skeleton_data_res.get_animations():
+		_anim_names[StringName(anim.get_name())] = true
+	sprite.animation_completed.connect(_on_sprite_animation_completed)
 	_build_context_menu()
 	# Lets you run DesktopPet.tscn on its own (F6) for quick testing.
 	if get_parent() == get_tree().root:
@@ -85,33 +99,37 @@ func say_random_line(lines := PackedStringArray()) -> void:
 # --- Animation helpers ------------------------------------------------------------
 
 func has_anim(anim: StringName) -> bool:
-	return sprite.sprite_frames.has_animation(anim)
+	return _anim_names.has(anim)
 
 
-## Plays `anim`, or `fallback` if the SpriteFrames doesn't define it yet.
+## Plays `anim`, or `fallback` if the skeleton doesn't define it.
 func play_anim(anim: StringName, fallback: StringName = &"idle") -> void:
-	if has_anim(anim):
-		sprite.play(anim)
-	elif has_anim(fallback):
-		sprite.play(fallback)
+	if not has_anim(anim):
+		if not has_anim(fallback):
+			return
+		anim = fallback
+	sprite.get_animation_state().set_animation(anim, not one_shot_anims.has(anim), 0)
+
+
+func _on_sprite_animation_completed(_sprite: SpineSprite, _state: SpineAnimationState, entry: SpineTrackEntry) -> void:
+	var anim := StringName(entry.get_animation().get_name())
+	if one_shot_anims.has(anim):
+		animation_finished.emit(anim)
 
 
 ## Faces the sprite towards `direction` (-1 = left, 1 = right). Only the sprite is
 ## flipped so the speech bubble never gets mirrored.
 func face(direction: float) -> void:
 	if not is_zero_approx(direction):
-		sprite.flip_h = direction < 0.0
+		sprite.scale.x = absf(sprite.scale.x) * signf(direction)
 
 
 # --- Geometry -----------------------------------------------------------------------
 
-## Screen-space rectangle of the current sprite frame (assumes `centered = true`).
+## Screen-space box standing on the skeleton's root (the feet), see hit_size.
 func get_hit_rect() -> Rect2:
-	var texture := sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
-	if texture == null:
-		return Rect2(global_position, Vector2.ZERO)
-	var size := texture.get_size() * sprite.global_scale.abs()
-	return Rect2(sprite.global_position - size * 0.5, size)
+	var size := hit_size * sprite.global_scale.abs()
+	return Rect2(sprite.global_position - Vector2(size.x * 0.5, size.y), size)
 
 
 ## Everything that must stay clickable AND visible (see Main._update_passthrough).

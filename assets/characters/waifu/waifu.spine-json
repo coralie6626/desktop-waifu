@@ -1,0 +1,130 @@
+{
+"skeleton": { "hash": "waifu", "spine": "4.2.00", "x": -44, "y": -2, "width": 88, "height": 160, "images": "./", "audio": "" },
+"bones": [
+	{ "name": "root" },
+	{ "name": "hip", "parent": "root", "y": 36 },
+	{ "name": "leg_l", "parent": "hip", "x": -8 },
+	{ "name": "leg_r", "parent": "hip", "x": 8 },
+	{ "name": "torso", "parent": "hip" },
+	{ "name": "arm_l", "parent": "torso", "x": -18, "y": 42 },
+	{ "name": "arm_r", "parent": "torso", "x": 18, "y": 42 },
+	{ "name": "head", "parent": "torso", "y": 46 }
+],
+"slots": [
+	{ "name": "hair_back", "bone": "head", "attachment": "hair_back" },
+	{ "name": "leg_l", "bone": "leg_l", "attachment": "leg" },
+	{ "name": "leg_r", "bone": "leg_r", "attachment": "leg" },
+	{ "name": "torso", "bone": "torso", "attachment": "torso" },
+	{ "name": "skirt", "bone": "hip", "attachment": "skirt" },
+	{ "name": "arm_l", "bone": "arm_l", "attachment": "arm" },
+	{ "name": "arm_r", "bone": "arm_r", "attachment": "arm" },
+	{ "name": "head", "bone": "head", "attachment": "head" },
+	{ "name": "eyes", "bone": "head", "attachment": "eyes" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"hair_back": { "hair_back": { "y": 30, "width": 88, "height": 92 } },
+			"leg_l": { "leg": { "y": -19, "width": 16, "height": 38 } },
+			"leg_r": { "leg": { "y": -19, "width": 16, "height": 38 } },
+			"torso": { "torso": { "y": 24, "width": 44, "height": 48 } },
+			"skirt": { "skirt": { "y": -2, "width": 64, "height": 32 } },
+			"arm_l": { "arm": { "y": -14, "width": 16, "height": 40 } },
+			"arm_r": { "arm": { "y": -14, "width": 16, "height": 40 } },
+			"head": { "head": { "y": 34, "width": 80, "height": 76 } },
+			"eyes": {
+				"eyes": { "y": 26, "width": 44, "height": 16 },
+				"eyes_closed": { "y": 24, "width": 44, "height": 10 }
+			}
+		}
+	}
+],
+"animations": {
+	"idle": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes" }, { "time": 1.6, "name": "eyes_closed" }, { "time": 1.72, "name": "eyes" } ] }
+		},
+		"bones": {
+			"torso": { "scale": [ { "x": 1, "y": 1 }, { "time": 1, "x": 1, "y": 1.03 }, { "time": 2, "x": 1, "y": 1 } ] },
+			"head": { "rotate": [ { "value": 0 }, { "time": 1, "value": -3 }, { "time": 2, "value": 0 } ] },
+			"arm_l": { "rotate": [ { "value": 0 }, { "time": 1, "value": -4 }, { "time": 2, "value": 0 } ] },
+			"arm_r": { "rotate": [ { "value": 0 }, { "time": 1, "value": 4 }, { "time": 2, "value": 0 } ] }
+		}
+	},
+	"idle_action": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes" }, { "time": 0.25, "name": "eyes_closed" }, { "time": 1.3, "name": "eyes" } ] }
+		},
+		"bones": {
+			"arm_r": { "rotate": [
+				{ "value": 0 }, { "time": 0.25, "value": 150 }, { "time": 0.45, "value": 125 }, { "time": 0.65, "value": 155 },
+				{ "time": 0.85, "value": 125 }, { "time": 1.05, "value": 155 }, { "time": 1.3, "value": 150 }, { "time": 1.6, "value": 0 }
+			] },
+			"head": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": 6 }, { "time": 1.3, "value": 6 }, { "time": 1.6, "value": 0 } ] }
+		}
+	},
+	"walk": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes" } ] }
+		},
+		"bones": {
+			"hip": { "translate": [ { "x": 0, "y": 0 }, { "time": 0.15, "x": 0, "y": 3 }, { "time": 0.3, "x": 0, "y": 0 }, { "time": 0.45, "x": 0, "y": 3 }, { "time": 0.6, "x": 0, "y": 0 } ] },
+			"leg_l": {
+				"translate": [ { "x": 0, "y": 0 }, { "time": 0.15, "x": 0, "y": 6 }, { "time": 0.3, "x": 0, "y": 0 } ],
+				"rotate": [ { "value": 0 }, { "time": 0.15, "value": -6 }, { "time": 0.3, "value": 0 } ]
+			},
+			"leg_r": {
+				"translate": [ { "time": 0.3, "x": 0, "y": 0 }, { "time": 0.45, "x": 0, "y": 6 }, { "time": 0.6, "x": 0, "y": 0 } ],
+				"rotate": [ { "time": 0.3, "value": 0 }, { "time": 0.45, "value": 6 }, { "time": 0.6, "value": 0 } ]
+			},
+			"arm_l": { "rotate": [ { "value": -15 }, { "time": 0.3, "value": 15 }, { "time": 0.6, "value": -15 } ] },
+			"arm_r": { "rotate": [ { "value": -15 }, { "time": 0.3, "value": 15 }, { "time": 0.6, "value": -15 } ] },
+			"head": { "rotate": [ { "value": 2 }, { "time": 0.3, "value": -2 }, { "time": 0.6, "value": 2 } ] }
+		}
+	},
+	"drag": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes" } ] }
+		},
+		"bones": {
+			"arm_l": { "rotate": [ { "value": -160 }, { "time": 0.5, "value": -145 }, { "time": 1, "value": -160 } ] },
+			"arm_r": { "rotate": [ { "value": 160 }, { "time": 0.5, "value": 145 }, { "time": 1, "value": 160 } ] },
+			"leg_l": { "rotate": [ { "value": -10 }, { "time": 0.5, "value": 8 }, { "time": 1, "value": -10 } ] },
+			"leg_r": { "rotate": [ { "value": 10 }, { "time": 0.5, "value": -8 }, { "time": 1, "value": 10 } ] },
+			"head": { "rotate": [ { "value": -5 }, { "time": 0.5, "value": 5 }, { "time": 1, "value": -5 } ] }
+		}
+	},
+	"fall": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes_closed" } ] }
+		},
+		"bones": {
+			"arm_l": { "rotate": [ { "value": -120 }, { "time": 0.2, "value": -150 }, { "time": 0.4, "value": -120 } ] },
+			"arm_r": { "rotate": [ { "value": 120 }, { "time": 0.2, "value": 150 }, { "time": 0.4, "value": 120 } ] },
+			"leg_l": { "rotate": [ { "value": -20 }, { "time": 0.2, "value": -30 }, { "time": 0.4, "value": -20 } ] },
+			"leg_r": { "rotate": [ { "value": 20 }, { "time": 0.2, "value": 30 }, { "time": 0.4, "value": 20 } ] }
+		}
+	},
+	"sit": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes" }, { "time": 1.2, "name": "eyes_closed" }, { "time": 1.32, "name": "eyes" } ] }
+		},
+		"bones": {
+			"hip": { "translate": [ { "x": 0, "y": -18 }, { "time": 2, "x": 0, "y": -18 } ] },
+			"leg_l": {
+				"scale": [ { "x": 1, "y": 0.5 }, { "time": 2, "x": 1, "y": 0.5 } ],
+				"rotate": [ { "value": -10 }, { "time": 1, "value": -2 }, { "time": 2, "value": -10 } ]
+			},
+			"leg_r": {
+				"scale": [ { "x": 1, "y": 0.5 }, { "time": 2, "x": 1, "y": 0.5 } ],
+				"rotate": [ { "value": 10 }, { "time": 1, "value": 2 }, { "time": 2, "value": 10 } ]
+			},
+			"torso": { "scale": [ { "x": 1, "y": 1 }, { "time": 1, "x": 1, "y": 1.03 }, { "time": 2, "x": 1, "y": 1 } ] },
+			"head": { "rotate": [ { "value": 4 }, { "time": 1, "value": 7 }, { "time": 2, "value": 4 } ] },
+			"arm_l": { "rotate": [ { "value": 20 }, { "time": 2, "value": 20 } ] },
+			"arm_r": { "rotate": [ { "value": -20 }, { "time": 2, "value": -20 } ] }
+		}
+	}
+}
+}

@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Temp copies Godot makes of locked GDExtension libraries
+*.TMP
+~*

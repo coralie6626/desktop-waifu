@@ -1,0 +1,14 @@
+[remap]
+
+importer="spine.json"
+type="SpineSkeletonFileResource"
+uid="uid://3ddw4ovuyuof"
+path="res://.godot/imported/waifu.spine-json-5ba0554b496737a298d7c90871842983.spjson"
+
+[deps]
+
+source_file="res://assets/characters/waifu/waifu.spine-json"
+dest_files=["res://.godot/imported/waifu.spine-json-5ba0554b496737a298d7c90871842983.spjson"]
+
+[params]
+

@@ -1,56 +1,13 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/pet/desktop_pet.gd" id="1_pet"]
-[ext_resource type="Texture2D" path="res://icon.svg" id="2_icon"]
+[ext_resource type="SpineSkeletonDataResource" path="res://assets/characters/waifu/waifu_data.tres" id="2_waifu"]
 [ext_resource type="Script" path="res://scripts/ui/speech_bubble.gd" id="3_bubble"]
 [ext_resource type="Script" path="res://scripts/fsm/pet_state_machine.gd" id="4_fsm"]
 [ext_resource type="Script" path="res://scripts/fsm/states/idle_state.gd" id="5_idle"]
 [ext_resource type="Script" path="res://scripts/fsm/states/wander_state.gd" id="6_wander"]
 [ext_resource type="Script" path="res://scripts/fsm/states/dragged_state.gd" id="7_dragged"]
 [ext_resource type="Script" path="res://scripts/fsm/states/sitting_state.gd" id="8_sitting"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pet"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_icon")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_icon")
-}],
-"loop": false,
-"name": &"idle_action",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_icon")
-}],
-"loop": true,
-"name": &"walk",
-"speed": 8.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_icon")
-}],
-"loop": true,
-"name": &"drag",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_icon")
-}],
-"loop": true,
-"name": &"sit",
-"speed": 5.0
-}]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -71,11 +28,8 @@ corner_radius_bottom_left = 12
 [node name="DesktopPet" type="Node2D"]
 script = ExtResource("1_pet")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -64)
-sprite_frames = SubResource("SpriteFrames_pet")
-animation = &"idle"
-autoplay = "idle"
+[node name="Sprite" type="SpineSprite" parent="."]
+skeleton_data_res = ExtResource("2_waifu")
 
 [node name="SpeechBubble" type="PanelContainer" parent="."]
 visible = false

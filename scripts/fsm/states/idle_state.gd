@@ -35,9 +35,9 @@ func _play_idle_action() -> void:
 	if not pet.has_anim(&"idle_action"):
 		pet.say_random_line()
 		return
-	# "idle_action" must be a non-looping animation, otherwise animation_finished never fires.
+	# "idle_action" must be listed in pet.one_shot_anims, otherwise animation_finished never fires.
 	pet.play_anim(&"idle_action")
-	await pet.sprite.animation_finished
+	await pet.animation_finished
 	if is_active():
 		pet.play_anim(&"idle")
 

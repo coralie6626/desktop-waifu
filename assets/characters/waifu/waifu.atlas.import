@@ -1,0 +1,16 @@
+[remap]
+
+importer="spine.atlas"
+type="SpineAtlasResource"
+uid="uid://bi6s3t8hqjm4y"
+path="res://.godot/imported/waifu.atlas-d0bf0a89a4788dd77a9c11abc5335042.spatlas"
+
+[deps]
+
+source_file="res://assets/characters/waifu/waifu.atlas"
+dest_files=["res://.godot/imported/waifu.atlas-d0bf0a89a4788dd77a9c11abc5335042.spatlas"]
+
+[params]
+
+normal_map_prefix="n"
+specular_map_prefix="s"
