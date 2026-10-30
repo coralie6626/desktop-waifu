@@ -43,7 +43,7 @@ out or swapped for local equivalents.
 | Music: media keys from the Talk menu, with a little dance (F-3.6, first step) | 🟡 | `TalkMenu`, `WindowTracker.press_key()` |
 | Hops onto windows, falls off covered title bars, dodges dragged windows (F-4.5) | ✅ | `Hop` state, `WindowTracker.find_hop_target()`, `WindowDodger` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
-| Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
+| Move her across monitors: drag her over, pick one in the tray, or follow the mouse (F-W3, F-1.4) | ✅ | `Main.move_to_screen()` |
 
 ---
 
@@ -126,7 +126,7 @@ Most later features depend on these, so they come first.
 - The menu is a separate window, like `ContextMenu`, so it isn't clipped by the
   click-through region.
 
-### F-1.4 Drag across monitors (M, see F-W3)
+### F-1.4 Drag across monitors (M, see F-W3) ✅
 
 ---
 
@@ -259,7 +259,7 @@ or from the tray.
 
 ## Settings and system tray menu
 
-### F-S1 Tray menu layout (M, after F-0.2) 🟡
+### F-S1 Tray menu layout (M, after F-0.2) ✅
 ```
 Character ▸  Wardrobe…
              Schedule…   (bedtime, rest reminders)
@@ -288,11 +288,14 @@ Quit
 - Done that way: the WindowTracker helper sets `WS_EX_TRANSPARENT | WS_EX_LAYERED` (with
   full opacity, so per-pixel transparency still works) on our window.
 
-### F-W3 Multiple monitors (L)
+### F-W3 Multiple monitors (L) ✅
 - Option A: one overlay window per monitor, with the pet handed between them when
   dragged past an edge.
 - Option B: one overlay covering the bounding box of all usable areas. This is simpler,
   but needs per-monitor floors (taskbar heights) and gaps between monitors handled.
+- Done as a variant of option A: one overlay window that moves to the monitor she's on
+  (dragged across, picked in Settings > Monitor, or following the mouse), so each
+  monitor keeps its own size and taskbar. Tested on two side-by-side 1080p monitors.
 - Also needs the `WindowTracker` coordinate maths checked for monitors with different
   DPI.
 

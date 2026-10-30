@@ -77,11 +77,16 @@ func _ready() -> void:
 		setup(get_viewport_rect())
 
 
-## Called by Main once the overlay window has its final size.
+## Called by Main once the overlay window has its final size: starts her up.
 func setup(play_area: Rect2) -> void:
 	bounds = play_area
 	position = Vector2(bounds.get_center().x, floor_y)
 	state_machine.start(self)
+
+
+## A new play area (the overlay moved to another monitor), keeping whatever she's doing.
+func set_bounds(play_area: Rect2) -> void:
+	bounds = play_area
 
 
 func _process(_delta: float) -> void:
