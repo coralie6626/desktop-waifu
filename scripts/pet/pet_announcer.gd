@@ -53,6 +53,8 @@ func show_next() -> void:
 	_pet.play_reaction(&"idle_action")
 	_pet.say_message(message_for(reminder), 3600.0)
 	Sound.chime()
+	if reminder.kind == Reminders.KIND_REMINDER:
+		SaveData.unlock_memory("first_reminder")
 	await _pet.bubble.closed
 	_active = false
 	if _pet.state_machine.current_state.name == PetStateMachine.ANNOUNCE:

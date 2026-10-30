@@ -4,10 +4,6 @@ extends Node
 ## godot --headless res://tests/pet_test.tscn (exit code 1 on failure).
 ## Save data it touches (affection, memories) is put back afterwards.
 
-const SAVED_KEYS: Array[StringName] = [
-	&"affection/points", &"affection/day", &"affection/gained_today", &"talk/memories",
-]
-
 var _failures := 0
 var _log: Array[String] = []
 var _pet: DesktopPet
@@ -15,9 +11,7 @@ var _gestures: PetGestures
 
 
 func _ready() -> void:
-	var saved := {}
-	for key in SAVED_KEYS:
-		saved[key] = SaveData.get_value(key)
+	var stores := [SaveData.snapshot(), Settings.snapshot()]
 
 	_pet = load("res://scenes/DesktopPet.tscn").instantiate()
 	add_child(_pet)
@@ -36,9 +30,11 @@ func _ready() -> void:
 	await _test_reactions()
 	_test_affection()
 
-	for key in SAVED_KEYS:
-		SaveData.set_value(key, saved[key])
-	SaveData.flush()
+	# Let anything still pending (deferred calls, a queued announcement) happen first.
+	for i in 2:
+		await get_tree().process_frame
+	SaveData.restore(stores[0])
+	Settings.restore(stores[1])
 	if _failures == 0:
 		print("All pet checks passed.")
 	else:

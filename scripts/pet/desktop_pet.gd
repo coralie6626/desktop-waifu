@@ -35,7 +35,7 @@ const REACTION_TRACK := 1
 ## Seconds a reaction takes to fade in and out.
 @export var reaction_mix := 0.15
 
-enum MenuId { TALK, SIT, HIDE, QUIT }
+enum MenuId { TALK, SIT, TUCK_IN, HIDE, QUIT }
 
 ## Area the pet lives in, in window coordinates. Its bottom edge is the taskbar's top edge.
 var bounds := Rect2()
@@ -123,6 +123,17 @@ func set_shown(shown: bool) -> void:
 ## still and skip idle chatter.
 func is_busy() -> bool:
 	return gestures.is_patting() or conversation.is_running() or announcer.is_active()
+
+
+## Asleep without her blanket (she dozed off), waiting to be tucked in.
+func is_dozing() -> bool:
+	var state := state_machine.current_state
+	return state.name == PetStateMachine.SLEEPING and not state.get(&"has_blanket")
+
+
+func tuck_in() -> void:
+	if is_dozing():
+		state_machine.current_state.call(&"tuck_in")
 
 
 # --- Gestures (see PetGestures; clicks and pats go to PetReactions) ------------------
@@ -267,6 +278,7 @@ func _build_context_menu() -> void:
 	context_menu.theme = preload("res://ui/menu_theme.tres")
 	context_menu.add_item("Talk...", MenuId.TALK)
 	context_menu.add_item("Sit down", MenuId.SIT)
+	context_menu.add_item("Tuck her in", MenuId.TUCK_IN)
 	context_menu.add_separator()
 	# Only where there's a tray icon to bring her back with.
 	if DisplayServer.has_feature(DisplayServer.FEATURE_STATUS_INDICATOR):
@@ -278,6 +290,7 @@ func _build_context_menu() -> void:
 func _open_context_menu() -> void:
 	# embed_subwindows is off, so the popup is its own OS window placed in screen
 	# coordinates and isn't clipped by our passthrough region.
+	context_menu.set_item_disabled(context_menu.get_item_index(MenuId.TUCK_IN), not is_dozing())
 	context_menu.popup(Rect2i(DisplayServer.mouse_get_position(), Vector2i.ZERO))
 
 
@@ -287,6 +300,8 @@ func _on_context_menu_id_pressed(id: int) -> void:
 			talk_menu.open()
 		MenuId.SIT:
 			state_machine.transition_to(PetStateMachine.SITTING)
+		MenuId.TUCK_IN:
+			tuck_in()
 		MenuId.HIDE:
 			set_shown(false)
 		MenuId.QUIT:

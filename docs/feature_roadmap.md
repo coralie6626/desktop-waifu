@@ -35,6 +35,9 @@ out or swapped for local equivalents.
 | Tray menu with Character and Settings submenus; Schedule and Game whitelist windows (F-S1, F-S2) | ✅ | `TrayIcon`, `ScheduleWindow`, `GamesWindow` |
 | Always on top, click-through mode, hide for 30 min or until restart (F-W1, F-W2, F-W4) | ✅ | `Main`, `WindowTracker.set_click_through()`, `TrayIcon` |
 | Voice and SFX buses with volumes, blip on lines, chime on reminders; break reminders (F-0.7, F-W5) | ✅ | `Sound` autoload, `RestNudge` |
+| Talk about feelings; Memories gallery with replay (F-2.3, F-2.4) | ✅ | `data/talk/feelings.json`, `MemoriesWindow` |
+| Tuck her in after she dozes off past bedtime; greetings, welcome back, lunch (F-4.3, F-4.4) | ✅ | `SleepSchedule.doze_off()`, `Greeter` |
+| Wardrobe window with live preview; local unlocks, daily streak (F-5.2, F-5.3) | ✅ | `WardrobeWindow`, `Unlocks` autoload, `data/wardrobe/items.json` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -140,11 +143,11 @@ or from the tray.
 - 3–5 answers (great, okay, tired, stressed, bad), each with a fitting reply.
 - Store one entry per day in `save.json` for a simple mood history.
 
-### F-2.3 Talk about feelings (S)
+### F-2.3 Talk about feelings (S) ✅
 - Branching mini-dialogues built from the same dialogue data as F-0.5, with 2–3 choices
   per node.
 
-### F-2.4 Memories gallery (M)
+### F-2.4 Memories gallery (M) ✅
 - A list of unlocked Snack Time topics, milestone lines (first headpat, first perch,
   affection levels) and story events, each replayable.
 
@@ -212,11 +215,11 @@ or from the tray.
 - Asleep: a new `Sleeping` state with a lying-down animation, Zzz bubble and blanket
   slot. Clicking wakes her briefly.
 
-### F-4.3 Tuck her in (S)
+### F-4.3 Tuck her in (S) ✅
 - If you keep her up past a hard limit, she falls asleep without a blanket. A "Tuck her
   in" action (click or menu) shows the blanket and a sleepy thank-you.
 
-### F-4.4 Greetings by time of day (S)
+### F-4.4 Greetings by time of day (S) ✅
 - Good morning, lunch and late-night lines based on the clock, plus "welcome back" after
   the PC was idle or asleep (check for a jump in the system clock).
 
@@ -237,13 +240,13 @@ or from the tray.
   (sleep state only), **Cushion/Sofa** (Snack Time only).
 - Needs hat and glasses slots on the head bone, and blanket and sofa slots on root.
 
-### F-5.2 Wardrobe UI (M)
+### F-5.2 Wardrobe UI (M) ✅
 - A tray menu entry that opens a window with category tabs and a live preview (a second
   `SpineSprite` in the window).
 - The choice is saved in Settings. Pajamas and bedding switch automatically with the
   schedule (F-4.2).
 
-### F-5.3 Unlocks without Steam (S)
+### F-5.3 Unlocks without Steam (S) ✅
 - Replace Steam item drops with local unlocks: affection milestones, daily login streaks,
   Snack Time completions.
 - Optional: a rarity label for display only. Skip the duplicate-exchange system.

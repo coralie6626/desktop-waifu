@@ -1,0 +1,64 @@
+{
+	"_comment": "\"Talk about feelings\": a branching conversation (Conversation format, see mood_checkin.json) with 2-3 choices per step. \"do\": \"feelings_done\" marks it talked through (memory + a little affection).",
+	"steps": [
+		{
+			"say": "Of course. What's on your mind?",
+			"choices": [
+				{ "text": "I feel lonely", "steps": [
+					{ "say": "Oh... come here. Well, as close as a desktop allows.", "anim": "shy" },
+					{ "say": "Is it the kind of lonely where you miss someone, or where nobody seems to get you?", "choices": [
+						{ "text": "I miss someone", "steps": [
+							{ "say": "Missing someone means they matter a lot to you." },
+							{ "say": "Maybe send them a message today? Even a small one.", "anim": "happy" }
+						] },
+						{ "text": "Nobody gets me", "steps": [
+							{ "say": "That's a heavy feeling. But I'm trying to get you, at least!", "anim": "pout" },
+							{ "say": "And people who'd understand you exist. You just haven't met all of them yet." }
+						] }
+					] }
+				] },
+				{ "text": "I'm anxious about something", "steps": [
+					{ "say": "Anxious... is it something coming up soon?", "choices": [
+						{ "text": "Yes, very soon", "steps": [
+							{ "say": "Then let's make it small. What's one tiny step you could do right now?" },
+							{ "say": "Just one. The rest can wait.", "anim": "happy" }
+						] },
+						{ "text": "Not sure, it's just there", "steps": [
+							{ "say": "Sometimes worry shows up without a reason. That's okay too." },
+							{ "say": "Try this: name three things you can see right now. ...I'm one of them, right?", "anim": "happy" }
+						] }
+					] }
+				] },
+				{ "text": "I can't get motivated", "steps": [
+					{ "say": "Everyone has days like that. Even me, and my job is sitting on a taskbar!", "anim": "pout" },
+					{ "say": "Want to try a trick?", "choices": [
+						{ "text": "Sure", "steps": [
+							{ "say": "Set a five-minute timer and start. If you want to stop after that, you can." },
+							{ "say": "Most of the time, starting is the hard part. You can ask me for the timer~", "anim": "happy" }
+						] },
+						{ "text": "I just need a break", "steps": [
+							{ "say": "Then take one, for real. No guilt. Stretch, drink some water, come back.", "anim": "happy" }
+						] }
+					] }
+				] },
+				{ "text": "I'm proud of myself!", "steps": [
+					{ "say": "Really? Tell me everything! ...Okay, you can't type it here, but I'm imagining it.", "anim": "surprised" },
+					{ "say": "Whatever it was, you earned it. I'm proud of you too!", "anim": "happy" }
+				] },
+				{ "text": "I'm angry", "steps": [
+					{ "say": "Angry is allowed. Something wasn't fair, huh?", "choices": [
+						{ "text": "Someone was unfair", "steps": [
+							{ "say": "Ugh, that's the worst. I'd glare at them for you if I could.", "anim": "pout" },
+							{ "say": "Give it a little time before you answer them. You'll say it better." }
+						] },
+						{ "text": "I'm angry at myself", "steps": [
+							{ "say": "Hey, go easy on yourself. Would you talk to a friend like that?", "anim": "shy" },
+							{ "say": "Mistakes are how everyone learns. Even horse girls." }
+						] }
+					] }
+				] }
+			]
+		},
+		{ "say": "Thanks for telling me. You can always talk to me.", "anim": "happy", "do": "feelings_done" }
+	]
+}

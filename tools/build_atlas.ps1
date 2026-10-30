@@ -233,6 +233,26 @@ $g.DrawLine((Pen (Color 220 180 110) 1.4), $x + 3, $y + 15, $x + 121, $y + 15)
 $g.DrawPath((Pen $outline 2), $rect)
 Add-Region 'blanket' $x $y 124 68
 
+# --- More wardrobe items: beret, sunglasses -------------------------------------------
+$x = 130; $y = 280
+$beret = Color 214 72 84
+$g.FillEllipse((Brush $beret), $x + 2, $y + 8, 60, 26)
+$g.FillEllipse((Brush (Color 236 104 114)), $x + 10, $y + 10, 34, 10)
+$g.DrawEllipse((Pen $outline 2), $x + 2, $y + 8, 60, 26)
+$g.FillRectangle((Brush $beret), $x + 29, $y + 2, 5, 8)
+$g.DrawRectangle((Pen $outline 1.4), $x + 29, $y + 2, 5, 8)
+Add-Region 'beret' $x $y 64 36
+
+$x = 200; $y = 280
+$shade = Color 40 34 52 230
+foreach ($c in @(14.5, 42.5)) {
+	$g.FillEllipse((Brush $shade), $x + $c - 11, $y + 2, 22, 17)
+	$g.DrawEllipse((Pen $outline 2), $x + $c - 11, $y + 2, 22, 17)
+	$g.FillEllipse((Brush (Color 255 255 255 120)), $x + $c - 6, $y + 5, 5, 3)
+}
+$g.DrawLine((Pen $outline 2.2), $x + 25, $y + 8, $x + 32, $y + 8)
+Add-Region 'sunglasses' $x $y 56 22
+
 $g.Dispose()
 $sheet.Save((Join-Path $outDir 'waifu.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $sheet.Dispose()

@@ -4,7 +4,8 @@ extends Node
 ## an empty bedtime turns it off). Some hours before bedtime is WIND_DOWN: she changes
 ## into pajamas (see Wardrobe) and yawns (lines with "phase": "wind_down"). From bedtime
 ## to wake time is NIGHT: she asks to go to sleep, Yes or Stay up, and asks again a while
-## after a "stay up". Asleep, she's in the Sleeping state until wake time.
+## after a "stay up"; kept up HARD_LIMIT_HOURS past bedtime, she dozes off without her
+## blanket. Asleep, she's in the Sleeping state until wake time.
 
 signal phase_changed(phase: Phase)
 
@@ -13,6 +14,8 @@ enum Phase { DAY, WIND_DOWN, NIGHT }
 const PHASE_NAMES: PackedStringArray = ["day", "wind_down", "night"]
 ## Hours before bedtime that she starts winding down.
 const WIND_DOWN_HOURS := 2.0
+## Hours after bedtime that she can't stay awake any more and dozes off, blanket or not.
+const HARD_LIMIT_HOURS := 2.0
 
 ## Minutes to wait before asking again after "stay up" (or a dismissed question).
 @export var ask_again_minutes := 30.0
@@ -50,7 +53,9 @@ func check() -> void:
 			if _pet.state_machine.current_state.name == PetStateMachine.SLEEPING:
 				_pet.state_machine.transition_to(PetStateMachine.IDLE)
 				_pet.say_line(&"wake_up")
-	if phase == Phase.NIGHT and Time.get_ticks_msec() >= _ask_after and _can_ask():
+	if phase == Phase.NIGHT and _can_ask() and past_hard_limit():
+		doze_off()
+	elif phase == Phase.NIGHT and Time.get_ticks_msec() >= _ask_after and _can_ask():
 		ask_to_sleep()
 
 
@@ -66,6 +71,22 @@ func ask_to_sleep() -> void:
 	if finished and _wants_sleep:
 		_wants_sleep = false
 		_pet.state_machine.transition_to(PetStateMachine.SLEEPING)
+
+
+## Kept up too long, she falls asleep where she is, without her blanket (tuck her in!).
+func doze_off() -> void:
+	_pet.state_machine.transition_to(PetStateMachine.SLEEPING, {"blanket": false})
+	_pet.say_line(&"dozed_off")
+
+
+## Whether it's more than HARD_LIMIT_HOURS past bedtime (and still night).
+static func past_hard_limit() -> bool:
+	var bedtime := parse_clock(Settings.get_value(&"schedule/bedtime"))
+	if bedtime < 0 or current_phase() != Phase.NIGHT:
+		return false
+	var clock := Time.get_time_dict_from_system()
+	var since := posmod(clock.hour * 60 + clock.minute - bedtime, 1440)
+	return since >= roundi(HARD_LIMIT_HOURS * 60.0)
 
 
 ## The phase for the current time and settings.

@@ -61,6 +61,18 @@ func reset_value(key: StringName) -> void:
 		set_value(key, _defaults_cache[key])
 
 
+## A copy of every value, to put back later with restore() (the tests do this).
+func snapshot() -> Dictionary:
+	return _values.duplicate(true)
+
+
+## Puts back the values from snapshot() and saves them right away.
+func restore(values: Dictionary) -> void:
+	for key: StringName in values:
+		set_value(key, values[key])
+	flush()
+
+
 func has_key(key: StringName) -> bool:
 	return _defaults_cache.has(key)
 

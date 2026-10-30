@@ -11,7 +11,7 @@ var content := VBoxContainer.new()
 func _init() -> void:
 	always_on_top = true
 	transient = false
-	wrap_controls = true
+	wrap_controls = false # Autowrapped hints would make it grow to their unwrapped height.
 	visible = false
 	var panel := PanelContainer.new()
 	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

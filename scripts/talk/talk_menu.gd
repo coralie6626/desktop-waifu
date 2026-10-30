@@ -5,9 +5,10 @@ extends PopupMenu
 ## Snack Time and the mood check-in run as Conversations; the scratchpad and "Keep time
 ## for me" open the Desk tools.
 
-enum Id { SNACK, MOOD, CHAT, NOTES }
+enum Id { SNACK, MOOD, FEELINGS, CHAT, MEMORIES, NOTES }
 
 const MOOD_CHECKIN_PATH := "res://data/talk/mood_checkin.json"
+const FEELINGS_PATH := "res://data/talk/feelings.json"
 
 @onready var _pet := get_parent() as DesktopPet
 @onready var _conversation: Conversation = $"../Conversation"
@@ -17,7 +18,9 @@ func _ready() -> void:
 	theme = preload("res://ui/menu_theme.tres")
 	add_item("Snack time", Id.SNACK)
 	add_item("How was your day?", Id.MOOD)
+	add_item("Talk about feelings", Id.FEELINGS)
 	add_item("Say something", Id.CHAT)
+	add_item("Memories...", Id.MEMORIES)
 	add_separator()
 	add_item("Jot something down", Id.NOTES)
 	var time_menu := TimeMenu.new()
@@ -44,6 +47,10 @@ func _on_id_pressed(id: int) -> void:
 			start_snack_time()
 		Id.MOOD:
 			start_mood_check_in()
+		Id.FEELINGS:
+			start_feelings()
+		Id.MEMORIES:
+			Desk.open_memories(_pet)
 		Id.NOTES:
 			Desk.open_notes()
 		Id.CHAT:
@@ -75,10 +82,19 @@ func start_mood_check_in() -> void:
 	await _conversation.run(steps)
 
 
+func start_feelings() -> void:
+	var data: Variant = Dialogue.load_json(FEELINGS_PATH)
+	if data is Dictionary:
+		await _conversation.run(data.get("steps", []))
+
+
 func _on_action(action: String, value: Variant) -> void:
 	match action:
 		"set_mood":
 			Mood.record(value)
+		"feelings_done":
+			SaveData.unlock_memory("first_feelings")
+			Affection.add(1)
 		"finish_topic":
 			SnackTime.finish(value)
 		_:

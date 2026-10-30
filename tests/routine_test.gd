@@ -2,21 +2,14 @@ extends Node
 ## Self-check for her daily routine: the bedtime schedule, sleeping, the wardrobe's
 ## skins, and watching games. Run this scene (F6), or
 ## godot --headless res://tests/routine_test.tscn (exit code 1 on failure).
-## Settings it touches are put back afterwards.
-
-const SAVED_SETTINGS: Array[StringName] = [
-	&"schedule/bedtime", &"schedule/wake_time", &"wardrobe/hat", &"wardrobe/glasses",
-	&"wardrobe/outfit", &"games/whitelist", &"games/blacklist",
-]
+## Settings and save data it touches are put back afterwards.
 
 var _failures := 0
 var _pet: DesktopPet
 
 
 func _ready() -> void:
-	var saved := {}
-	for key in SAVED_SETTINGS:
-		saved[key] = Settings.get_value(key)
+	var stores := [SaveData.snapshot(), Settings.snapshot()]
 	# Start in the daytime whatever the real clock says: no schedule.
 	Settings.set_value(&"schedule/bedtime", "")
 
@@ -31,9 +24,11 @@ func _ready() -> void:
 	await _test_sleep()
 	await _test_watching()
 
-	for key in SAVED_SETTINGS:
-		Settings.set_value(key, saved[key])
-	Settings.flush()
+	# Let anything still pending (deferred calls, a queued announcement) happen first.
+	for i in 2:
+		await get_tree().process_frame
+	SaveData.restore(stores[0])
+	Settings.restore(stores[1])
 	if _failures == 0:
 		print("All routine checks passed.")
 	else:
@@ -72,6 +67,9 @@ func _test_games() -> void:
 func _test_wardrobe() -> void:
 	var wardrobe := _pet.wardrobe
 	_check("daytime: just bedding", wardrobe.worn == PackedStringArray(["bedding/default"]))
+	# Unlock the nightcap (first sleep) and round glasses (3 topics) for the test.
+	SaveData.set_value(&"talk/memories", {"first_sleep": 1})
+	SaveData.set_value(&"talk/unlocked_topics", PackedStringArray(["a", "b", "c"]))
 	Settings.set_value(&"wardrobe/glasses", "round")
 	Settings.set_value(&"wardrobe/hat", "nightcap")
 	_check("glasses and a hat from the settings", wardrobe.worn == PackedStringArray(["hat/nightcap", "glasses/round", "bedding/default"]))

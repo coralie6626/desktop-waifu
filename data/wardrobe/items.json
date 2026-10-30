@@ -1,0 +1,22 @@
+{
+	"_comment": "Wardrobe items, by skin name (\"<category>/<item>\" in waifu.spine-json). \"default\" items have no skin. \"unlock\" lists what's needed (all of it): level (affection level), streak (best daily streak), topics (Snack Time topics talked through), memory (an unlocked memory id). \"rarity\" is only shown in the wardrobe.",
+	"categories": {
+		"outfit": { "title": "Outfit", "none": false },
+		"pajamas": { "title": "Pajamas", "none": false },
+		"hat": { "title": "Hat", "none": true },
+		"glasses": { "title": "Glasses", "none": true },
+		"bedding": { "title": "Bedding", "none": false },
+		"cushion": { "title": "Cushion", "none": false }
+	},
+	"items": {
+		"outfit/default": { "title": "Polka-dot dress", "rarity": "common" },
+		"outfit/pajamas": { "title": "Starry pajamas (all day)", "rarity": "common", "unlock": { "memory": "first_sleep" } },
+		"pajamas/default": { "title": "Starry pajamas", "rarity": "common" },
+		"hat/nightcap": { "title": "Nightcap", "rarity": "common", "unlock": { "memory": "first_sleep" } },
+		"hat/beret": { "title": "Red beret", "rarity": "rare", "unlock": { "level": 2 } },
+		"glasses/round": { "title": "Round glasses", "rarity": "common", "unlock": { "topics": 3 } },
+		"glasses/sunglasses": { "title": "Sunglasses", "rarity": "rare", "unlock": { "streak": 3 } },
+		"bedding/default": { "title": "Polka-dot quilt", "rarity": "common" },
+		"cushion/default": { "title": "Pink cushion", "rarity": "common" }
+	}
+}
