@@ -52,6 +52,7 @@ func show_next() -> void:
 	var reminder: Dictionary = _queue.pop_front()
 	_pet.play_reaction(&"idle_action")
 	_pet.say_message(message_for(reminder), 3600.0)
+	Sound.chime()
 	await _pet.bubble.closed
 	_active = false
 	if _pet.state_machine.current_state.name == PetStateMachine.ANNOUNCE:

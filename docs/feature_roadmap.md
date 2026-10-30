@@ -32,6 +32,9 @@ out or swapped for local equivalents.
 | Sleep schedule: pajamas and yawns before bedtime, asks to sleep, sleeps under a blanket until morning (F-4.2) | ✅ | `SleepSchedule`, `Sleeping` state, `ZzzEffect` |
 | Outfits as Spine skins combined at runtime: pajamas, nightcap, round glasses, bedding (F-5.1) | ✅ | `Wardrobe` |
 | Watches full-screen games lying on the taskbar; whitelist/blacklist (F-4.1) | ✅ | `GameWatcher`, `Watching` state, `WindowTracker.foreground` |
+| Tray menu with Character and Settings submenus; Schedule and Game whitelist windows (F-S1, F-S2) | ✅ | `TrayIcon`, `ScheduleWindow`, `GamesWindow` |
+| Always on top, click-through mode, hide for 30 min or until restart (F-W1, F-W2, F-W4) | ✅ | `Main`, `WindowTracker.set_click_through()`, `TrayIcon` |
+| Voice and SFX buses with volumes, blip on lines, chime on reminders; break reminders (F-0.7, F-W5) | ✅ | `Sound` autoload, `RestNudge` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -89,7 +92,7 @@ Most later features depend on these, so they come first.
   `tools/art/waifu_base.png` and `tools/build_atlas.ps1` draws the new parts onto it
   and rewrites the atlas. Expressions play on Spine track 1, over the body animation.
 
-### F-0.7 Audio (S)
+### F-0.7 Audio (S) ✅
 - Add `Voice` and `SFX` audio buses with volume controlled from Settings.
 - Play a short sound when a line appears (blip or chime) until real voice lines exist.
 
@@ -249,7 +252,7 @@ or from the tray.
 
 ## Settings and system tray menu
 
-### F-S1 Tray menu layout (M, after F-0.2)
+### F-S1 Tray menu layout (M, after F-0.2) 🟡
 ```
 Character ▸  Wardrobe…
              Schedule…   (bedtime, rest reminders)
@@ -262,19 +265,21 @@ Hide for 30 min / Hide until restart
 Quit
 ```
 
-### F-S2 Game whitelist (S)
+### F-S2 Game whitelist (S) ✅
 - A list of executable names, editable in a small window, used by F-4.1.
 
-### F-W1 Always-on-top toggle (S)
+### F-W1 Always-on-top toggle (S) ✅
 - Wire `get_window().always_on_top` to Settings. `main.gd` currently forces it on at
   startup.
 
-### F-W2 Click-through mode (S)
+### F-W2 Click-through mode (S) ✅
 - When on, the whole window ignores clicks and she can only be reached from the tray.
 - An empty passthrough polygon doesn't do this: Godot treats it as "no region", which
   makes the whole window clickable. And on Windows the region also clips what's drawn,
   so a tiny region would hide her too (that's how hiding from the tray works). This
   needs `WS_EX_TRANSPARENT` set on the window through a helper instead.
+- Done that way: the WindowTracker helper sets `WS_EX_TRANSPARENT | WS_EX_LAYERED` (with
+  full opacity, so per-pixel transparency still works) on our window.
 
 ### F-W3 Multiple monitors (L)
 - Option A: one overlay window per monitor, with the pet handed between them when
@@ -284,10 +289,10 @@ Quit
 - Also needs the `WindowTracker` coordinate maths checked for monitors with different
   DPI.
 
-### F-W4 Hide and exit (S)
+### F-W4 Hide and exit (S) ✅
 - Hide with a timer ("back in 30 minutes"), with a goodbye or welcome-back line.
 
-### F-W5 Rest reminders (S)
+### F-W5 Rest reminders (S) ✅
 - An optional "stand up and stretch" or "drink water" nudge every N minutes.
 
 ---
