@@ -1,0 +1,60 @@
+{
+	"_comment": "Lines by trigger. A trigger is a list of lines, or {\"anim\": default reaction, \"lines\": [...]}. A line is a string or {\"text\", \"anim\", \"when\", \"weight\"}. \"when\" can test time (morning, afternoon, evening, night), level / level_min / level_max (affection level 0-4), mood (today's check-in answer), outfit and memory (an unlocked memory id). Lists mean any of them.",
+
+	"idle": [
+		"Hi there!",
+		"What are you working on?",
+		"Don't forget to drink some water~",
+		"*yawn*",
+		"I'm keeping an eye on you.",
+		{ "text": "Good morning! Did you have breakfast?", "when": { "time": "morning" } },
+		{ "text": "The morning sun is so nice~", "when": { "time": "morning" } },
+		{ "text": "Lunch soon? I could go for a snack.", "when": { "time": "afternoon" } },
+		{ "text": "Afternoons make me sleepy...", "anim": "shy", "when": { "time": "afternoon" } },
+		{ "text": "The evening is my favourite part of the day.", "when": { "time": "evening" } },
+		{ "text": "It's getting late, you know.", "when": { "time": "night" } },
+		{ "text": "Shouldn't you be in bed soon?", "anim": "pout", "when": { "time": "night" } },
+		{ "text": "I like hanging out with you.", "anim": "happy", "when": { "level_min": 2 } },
+		{ "text": "Hehe, I'm glad you're here.", "anim": "happy", "when": { "level_min": 3 } },
+		{ "text": "You said you were tired... take it easy, okay?", "when": { "mood": "tired" } },
+		{ "text": "Deep breaths. You've got this.", "when": { "mood": "stressed" } },
+		{ "text": "Still smiling from your great day? Me too~", "anim": "happy", "when": { "mood": "great" } },
+		{ "text": "I'm right here if you want to talk.", "when": { "mood": "bad" } }
+	],
+	"grab": ["Hey!", "Wheee~", "Put me down!", { "text": "Where are we going?", "when": { "level_min": 2 } }],
+	"sit": ["Comfy~", "Nice spot.", "I'll rest here a bit."],
+	"perch": ["Nice view from up here!", "This window is comfy~", "Don't close this one, okay?"],
+
+	"pat": ["Mmm~ that's nice...", "More pats, please~", "Ehehe...", "You're really good at this."],
+	"pat_end": ["Thanks for the pats!", "That was nice~", "Aww, done already?"],
+	"first_pat": ["O-oh! A headpat? ...I like it."],
+	"head": { "anim": "happy", "lines": ["Hehe~", "Hm? What is it?", "That tickles!"] },
+	"face": { "anim": "surprised", "lines": ["Hey! My nose!", "Eek!", "W-what was that for?"] },
+	"flustered": { "anim": "shy", "lines": ["H-hey! Not there!", "Wh-what are you doing?!", "Hands to yourself!"] },
+	"hands": {
+		"anim": "happy",
+		"lines": ["*holds your cursor*", "Your hand is warm~", "High five!", { "text": "Let's hold hands a little longer...", "anim": "shy", "when": { "level_min": 3 } }]
+	},
+	"annoyed": { "anim": "pout", "lines": ["Hmph. I'm not talking to you.", "Stop poking me!", "..."] },
+	"forgiven": { "anim": "happy", "lines": ["...Okay, you're forgiven.", "Fine. Just this once."] },
+	"level_up": {
+		"anim": "happy",
+		"lines": [
+			{ "text": "I think I'm starting to like it here.", "when": { "level": 1 } },
+			{ "text": "You're really nice to me, you know?", "when": { "level": 2 } },
+			{ "text": "I'm always happy when you're around.", "when": { "level": 3 } },
+			{ "text": "I... really like spending time with you.", "anim": "shy", "when": { "level": 4 } }
+		]
+	},
+
+	"talk_open": ["Hm? Want to talk?", "What's up?", { "text": "Yes? I'm all ears~", "when": { "level_min": 2 } }],
+	"talk_cancel": ["Oh, okay. Never mind~", "Maybe later, then."],
+
+	"snack_intro": ["Snack time! What should we talk about?", "Mmm, cookies. What's on your mind?"],
+	"snack_quiet": ["Just snacking together is nice too~", "*munch munch*"],
+	"snack_done_all": ["We've talked so much today! Let's snack again tomorrow~"],
+	"snack_end": { "anim": "happy", "lines": ["That was fun! Thanks for chatting.", "Hehe, I like our snack breaks."] },
+
+	"mood_ask": ["How was your day?", "So, how are you doing today?"],
+	"mood_again": ["You already told me today. Feeling any different?"]
+}

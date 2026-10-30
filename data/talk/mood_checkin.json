@@ -1,0 +1,52 @@
+{
+	"_comment": "The \"How was your day?\" check-in, in the Conversation format: a list of steps, each with \"say\" (text) or \"line\" (a trigger in lines.json), an optional \"anim\", and optional \"choices\" whose own \"steps\" run when picked. \"do\" runs an action (here set_mood).",
+	"steps": [
+		{
+			"line": "mood_ask",
+			"choices": [
+				{
+					"text": "Great!",
+					"do": "set_mood", "value": "great",
+					"steps": [
+						{ "say": "Yay! That makes me happy too~", "anim": "happy" },
+						{ "say": "What was the best part? ...You can tell me later. Hehe." }
+					]
+				},
+				{
+					"text": "Okay, I guess",
+					"do": "set_mood", "value": "okay",
+					"steps": [
+						{ "say": "Okay days are good days too." },
+						{ "say": "Let's make the rest of it a little better, yeah?", "anim": "happy" }
+					]
+				},
+				{
+					"text": "Tired...",
+					"do": "set_mood", "value": "tired",
+					"steps": [
+						{ "say": "Aww... you've been working hard.", "anim": "shy" },
+						{ "say": "Promise me you'll rest a bit, okay?" }
+					]
+				},
+				{
+					"text": "Stressed",
+					"do": "set_mood", "value": "stressed",
+					"steps": [
+						{ "say": "That sounds rough.", "anim": "surprised" },
+						{ "say": "Let's take one slow breath together. In... and out." },
+						{ "say": "One thing at a time. I'm right here.", "anim": "happy" }
+					]
+				},
+				{
+					"text": "Pretty bad",
+					"do": "set_mood", "value": "bad",
+					"steps": [
+						{ "say": "Oh no... I'm sorry.", "anim": "shy" },
+						{ "say": "You don't have to talk about it. I'll just stay close." },
+						{ "say": "Tomorrow can be better. And I'll still be here.", "anim": "happy" }
+					]
+				}
+			]
+		}
+	]
+}

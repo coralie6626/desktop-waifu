@@ -38,3 +38,7 @@ eyes_sleepy
 bounds: 156,160,48,14
 blush
 bounds: 206,160,64,14
+cushion
+bounds: 0,186,96,30
+snack
+bounds: 100,186,52,26

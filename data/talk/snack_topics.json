@@ -1,0 +1,141 @@
+{
+	"_comment": "Snack Time topics. Each day a few are offered (see SnackTime). A topic has an id, a menu title, an optional min_level (affection level needed), and steps in the Conversation format (see mood_checkin.json).",
+	"topics": [
+		{
+			"id": "favourite_snack",
+			"title": "Favourite snacks",
+			"steps": [
+				{ "say": "If I could only eat one snack forever... it'd be strawberry shortcake.", "anim": "happy" },
+				{
+					"say": "What about you? Sweet or salty?",
+					"choices": [
+						{ "text": "Sweet, obviously", "steps": [{ "say": "A fellow sweet tooth! I knew we'd get along.", "anim": "happy" }] },
+						{ "text": "Salty", "steps": [{ "say": "Chips and crackers? Okay, I'll share mine if you share yours.", "anim": "pout" }] },
+						{ "text": "Both at once", "steps": [{ "say": "Salted caramel?! You're a genius.", "anim": "surprised" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "rainy_days",
+			"title": "Rainy days",
+			"steps": [
+				{ "say": "Do you like rainy days?" },
+				{
+					"say": "I like listening to the rain on the window...",
+					"choices": [
+						{ "text": "Me too, it's cosy", "steps": [{ "say": "Right? Tea, a blanket, rain sounds... perfect.", "anim": "happy" }] },
+						{ "text": "I prefer sunshine", "steps": [{ "say": "Then I'll be your sunshine on rainy days!", "anim": "shy" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "horses",
+			"title": "Being a horse girl",
+			"steps": [
+				{ "say": "People always ask about my ears.", "anim": "surprised" },
+				{ "say": "Yes, they're real. Yes, they twitch when I'm happy. Don't stare!", "anim": "pout" },
+				{
+					"say": "...You can pat them sometimes, though.",
+					"anim": "shy",
+					"choices": [
+						{ "text": "Can I pat them now?", "steps": [{ "say": "Hehe. Rub the top of my head, then~", "anim": "happy" }] },
+						{ "text": "They're cute", "steps": [{ "say": "C-cute?! ...Thank you.", "anim": "shy" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "running",
+			"title": "Going for a run",
+			"steps": [
+				{ "say": "I love running. The wind in my hair, my tail flying behind me..." },
+				{ "say": "Sitting on your desktop all day makes my legs restless!", "anim": "pout" },
+				{
+					"say": "Do you exercise?",
+					"choices": [
+						{ "text": "Every day!", "steps": [{ "say": "Wow, respect! Let's race someday.", "anim": "happy" }] },
+						{ "text": "Sometimes", "steps": [{ "say": "Sometimes is still something. Keep it up!" }] },
+						{ "text": "Does walking to the fridge count?", "steps": [{ "say": "...It counts a little. Hehe.", "anim": "happy" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "dreams",
+			"title": "Dreams",
+			"steps": [
+				{ "say": "Last night I dreamt I was a giant, sitting on top of your monitor." },
+				{ "say": "You kept typing and I kept falling off the title bar!", "anim": "surprised" },
+				{
+					"say": "Do you remember your dreams?",
+					"choices": [
+						{ "text": "Almost always", "steps": [{ "say": "Then tell me the weird ones. I collect them.", "anim": "happy" }] },
+						{ "text": "Never", "steps": [{ "say": "Maybe I'll show up in one. Watch out~" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "flowers",
+			"title": "The flower in my hair",
+			"steps": [
+				{ "say": "Do you like my hair flower? It's a rose. Well, a rose and a little sunflower." },
+				{ "say": "The rose is for being brave, and the sunflower is for being cheerful.", "anim": "happy" },
+				{
+					"say": "What flower would you be?",
+					"choices": [
+						{ "text": "A sunflower", "steps": [{ "say": "Bright and always facing the sun. That suits you!", "anim": "happy" }] },
+						{ "text": "A cactus flower", "steps": [{ "say": "Prickly outside, pretty inside? Hehe, I can see it.", "anim": "pout" }] },
+						{ "text": "Something rare", "steps": [{ "say": "A rare flower... I'd take good care of it.", "anim": "shy" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "focus",
+			"title": "Staying focused",
+			"steps": [
+				{ "say": "You work a lot on this computer, huh?" },
+				{ "say": "My trick for focusing: work a little, then reward yourself with a snack.", "anim": "happy" },
+				{ "say": "Like right now! See, it works." }
+			]
+		},
+		{
+			"id": "home",
+			"title": "Living on a desktop",
+			"min_level": 1,
+			"steps": [
+				{ "say": "Can I tell you something? When I first got here, I was a little nervous." },
+				{ "say": "Big windows everywhere, the taskbar rumbling...", "anim": "surprised" },
+				{ "say": "But now it kind of feels like home.", "anim": "happy" }
+			]
+		},
+		{
+			"id": "together",
+			"title": "Us",
+			"min_level": 2,
+			"steps": [
+				{ "say": "Hey... do you ever think about how we met?", "anim": "shy" },
+				{
+					"say": "You just opened this program one day, and there I was.",
+					"choices": [
+						{ "text": "Best click I ever made", "steps": [{ "say": "Hehe... mine too.", "anim": "shy" }] },
+						{ "text": "It was fate", "steps": [{ "say": "Fate, huh? I like that.", "anim": "happy" }] }
+					]
+				}
+			]
+		},
+		{
+			"id": "secret",
+			"title": "A secret",
+			"min_level": 3,
+			"steps": [
+				{ "say": "Okay, a secret. But you can't tell anyone." },
+				{ "say": "When you're not looking, I practise my victory pose on the taskbar.", "anim": "shy" },
+				{ "say": "Don't laugh! ...Fine, you can laugh a little.", "anim": "happy" }
+			]
+		}
+	]
+}

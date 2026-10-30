@@ -16,6 +16,7 @@ var _menu := PopupMenu.new()
 
 func _ready() -> void:
 	tooltip = ProjectSettings.get_setting("application/config/name")
+	_menu.theme = preload("res://ui/menu_theme.tres")
 	_menu.add_item("Hide", MenuId.TOGGLE)
 	_menu.add_separator()
 	_menu.add_item("Quit", MenuId.QUIT)

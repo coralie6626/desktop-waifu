@@ -12,6 +12,9 @@
 [ext_resource type="Script" path="res://scripts/desktop/window_tracker.gd" id="10_tracker"]
 [ext_resource type="Script" path="res://scripts/pet/pet_gestures.gd" id="11_gestures"]
 [ext_resource type="Script" path="res://scripts/pet/pet_reactions.gd" id="12_reactions"]
+[ext_resource type="Script" path="res://scripts/talk/conversation.gd" id="13_conversation"]
+[ext_resource type="Script" path="res://scripts/ui/choice_menu.gd" id="14_choices"]
+[ext_resource type="Script" path="res://scripts/talk/talk_menu.gd" id="15_talk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -83,3 +86,12 @@ script = ExtResource("11_gestures")
 
 [node name="Reactions" type="Node" parent="."]
 script = ExtResource("12_reactions")
+
+[node name="ChoiceMenu" type="PopupMenu" parent="."]
+script = ExtResource("14_choices")
+
+[node name="Conversation" type="Node" parent="."]
+script = ExtResource("13_conversation")
+
+[node name="TalkMenu" type="PopupMenu" parent="."]
+script = ExtResource("15_talk")

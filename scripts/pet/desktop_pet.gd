@@ -24,16 +24,6 @@ const REACTION_TRACK := 1
 ## Minimum title bar left on each side of the feet for her to sit there.
 @export var perch_margin := 12.0
 
-@export_group("Dialogue")
-@export var idle_lines: PackedStringArray = [
-	"Hi there!",
-	"What are you working on?",
-	"Don't forget to drink some water~",
-	"*yawn*",
-	"I'm keeping an eye on you.",
-]
-@export var grab_lines: PackedStringArray = ["Hey!", "Wheee~", "Put me down!"]
-
 @export_group("Animation")
 ## Size of the clickable box, measured up from the feet (unscaled skeleton units).
 @export var hit_size := Vector2(92, 176)
@@ -59,6 +49,9 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var window_tracker: WindowTracker = $WindowTracker
 @onready var gestures: PetGestures = $Gestures
 @onready var reactions: PetReactions = $Reactions
+@onready var conversation: Conversation = $Conversation
+@onready var talk_menu: TalkMenu = $TalkMenu
+@onready var choice_menu: ChoiceMenu = $ChoiceMenu
 
 
 func _ready() -> void:
@@ -106,11 +99,18 @@ func set_shown(shown: bool) -> void:
 		return
 	if not shown:
 		gestures.cancel()
+		conversation.cancel()
 		stop_reaction()
 		bubble.hide()
 		context_menu.hide()
+		talk_menu.hide()
 	visible = shown
 	process_mode = Node.PROCESS_MODE_INHERIT if shown else Node.PROCESS_MODE_DISABLED
+
+
+## True while she's being patted or talked to: states hold still and skip idle chatter.
+func is_busy() -> bool:
+	return gestures.is_patting() or conversation.is_running()
 
 
 # --- Gestures (see PetGestures; clicks and pats go to PetReactions) ------------------
@@ -119,9 +119,8 @@ func _on_drag_started(press_position: Vector2) -> void:
 	state_machine.transition_to(PetStateMachine.DRAGGED, {"grab_offset": global_position - press_position})
 
 
-## Stand-in until the Talk menu exists (F-1.3).
 func _on_double_clicked(_position: Vector2) -> void:
-	_open_context_menu()
+	talk_menu.open()
 
 
 # --- Dialogue -------------------------------------------------------------------
@@ -130,12 +129,16 @@ func say_message(text: String, duration: float = -1.0) -> void:
 	bubble.say_message(text, duration)
 
 
-## Says a random entry from `lines` (defaults to idle_lines).
-func say_random_line(lines := PackedStringArray()) -> void:
-	if lines.is_empty():
-		lines = idle_lines
-	if not lines.is_empty():
-		say_message(lines[randi() % lines.size()])
+## Says a line for `trigger` from Dialogue, with its reaction. Returns false if no line
+## fits right now.
+func say_line(trigger: StringName, duration: float = -1.0) -> bool:
+	var line := Dialogue.pick(trigger)
+	if line.is_empty():
+		return false
+	say_message(line.text, duration)
+	if line.anim != &"":
+		play_reaction(line.anim)
+	return true
 
 
 # --- Animation helpers ------------------------------------------------------------
@@ -151,6 +154,12 @@ func play_anim(anim: StringName, fallback: StringName = &"idle") -> void:
 			return
 		anim = fallback
 	sprite.get_animation_state().set_animation(anim, not one_shot_anims.has(anim), 0)
+
+
+## The body animation playing now (track 0), or &"" if none.
+func current_anim() -> StringName:
+	var entry := sprite.get_animation_state().get_current(0)
+	return StringName(entry.get_animation().get_name()) if entry else &""
 
 
 ## Plays a reaction over the current body animation (see REACTION_TRACK). One-shot
@@ -242,7 +251,8 @@ func clamp_to_bounds() -> void:
 # --- Context menu -------------------------------------------------------------------
 
 func _build_context_menu() -> void:
-	context_menu.add_item("Say something", MenuId.TALK)
+	context_menu.theme = preload("res://ui/menu_theme.tres")
+	context_menu.add_item("Talk...", MenuId.TALK)
 	context_menu.add_item("Sit down", MenuId.SIT)
 	context_menu.add_separator()
 	# Only where there's a tray icon to bring her back with.
@@ -261,7 +271,7 @@ func _open_context_menu() -> void:
 func _on_context_menu_id_pressed(id: int) -> void:
 	match id:
 		MenuId.TALK:
-			say_random_line()
+			talk_menu.open()
 		MenuId.SIT:
 			state_machine.transition_to(PetStateMachine.SITTING)
 		MenuId.HIDE:
