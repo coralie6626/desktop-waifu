@@ -26,13 +26,14 @@ var _time_menu := TimeMenu.new()
 var _character_menu := PopupMenu.new()
 var _settings_menu := PopupMenu.new()
 var _volume_menu := PopupMenu.new()
+var _monitor_menu := PopupMenu.new()
 var _volume_menus: Dictionary[StringName, PopupMenu] = {}
 var _hide_timer := Timer.new()
 
 
 func _ready() -> void:
 	tooltip = ProjectSettings.get_setting("application/config/name")
-	for menu in [_menu, _time_menu, _character_menu, _settings_menu, _volume_menu]:
+	for menu in [_menu, _time_menu, _character_menu, _settings_menu, _volume_menu, _monitor_menu]:
 		menu.theme = preload("res://ui/menu_theme.tres")
 
 	_menu.add_item("Hide", MenuId.TOGGLE)
@@ -57,6 +58,8 @@ func _ready() -> void:
 		menu.id_pressed.connect(_on_volume_picked.bind(bus))
 		_volume_menus[bus] = menu
 		_add_submenu(_volume_menu, menu, "Voice" if bus == &"voice" else "Sound effects")
+	_monitor_menu.id_pressed.connect(_on_monitor_picked)
+	_add_submenu(_settings_menu, _monitor_menu, "Monitor")
 	_add_submenu(_settings_menu, _volume_menu, "Volume")
 	_add_submenu(_menu, _settings_menu, "Settings")
 
@@ -87,6 +90,7 @@ func _on_pressed(mouse_button: int, mouse_position: Vector2i) -> void:
 func _refresh_menu() -> void:
 	_menu.set_item_text(_menu.get_item_index(MenuId.TOGGLE), "Hide" if pet.visible else "Show")
 	_time_menu.pet = pet
+	_fill_monitor_menu()
 	_set_checked(_settings_menu, MenuId.ALWAYS_ON_TOP, Settings.get_value(&"window/always_on_top"))
 	_set_checked(_settings_menu, MenuId.CLICK_THROUGH, Settings.get_value(&"window/click_through"))
 	_set_checked(_settings_menu, MenuId.WATCH_DOWNLOADS, not String(Settings.get_value(&"tools/watch_folder")).is_empty())
@@ -139,6 +143,27 @@ func hide_pet(seconds: int) -> void:
 func _on_hide_timer_timeout() -> void:
 	pet.set_shown(true)
 	pet.say_line(&"welcome_back")
+
+
+## Primary, then each monitor (left to right), then "Follow the mouse"; the item's
+## metadata is the window/monitor value.
+func _fill_monitor_menu() -> void:
+	_monitor_menu.clear()
+	var screens := range(DisplayServer.get_screen_count())
+	screens.sort_custom(func(a: int, b: int) -> bool: return DisplayServer.screen_get_position(a).x < DisplayServer.screen_get_position(b).x)
+	var choices := [["Primary monitor", "primary"]]
+	for i in screens.size():
+		choices.append(["Monitor %d%s" % [i + 1, " (primary)" if screens[i] == DisplayServer.get_primary_screen() else ""], str(screens[i])])
+	choices.append(["Follow the mouse", "follow_mouse"])
+	var current: String = Settings.get_value(&"window/monitor")
+	for i in choices.size():
+		_monitor_menu.add_radio_check_item(choices[i][0], i)
+		_monitor_menu.set_item_metadata(i, choices[i][1])
+		_monitor_menu.set_item_checked(i, choices[i][1] == current)
+
+
+func _on_monitor_picked(index: int) -> void:
+	Settings.set_value(&"window/monitor", _monitor_menu.get_item_metadata(index))
 
 
 func _on_volume_picked(index: int, bus: StringName) -> void:
