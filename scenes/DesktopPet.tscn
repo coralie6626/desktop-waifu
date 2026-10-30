@@ -25,6 +25,9 @@
 [ext_resource type="Script" path="res://scripts/pet/game_watcher.gd" id="23_games"]
 [ext_resource type="Script" path="res://scripts/pet/rest_nudge.gd" id="24_rest"]
 [ext_resource type="Script" path="res://scripts/pet/greeter.gd" id="25_greeter"]
+[ext_resource type="Script" path="res://scripts/desktop/folder_watcher.gd" id="26_folder"]
+[ext_resource type="Script" path="res://scripts/fsm/states/hop_state.gd" id="27_hop"]
+[ext_resource type="Script" path="res://scripts/pet/window_dodger.gd" id="28_dodger"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -97,6 +100,9 @@ script = ExtResource("18_sleeping")
 [node name="Watching" type="Node" parent="StateMachine"]
 script = ExtResource("19_watching")
 
+[node name="Hop" type="Node" parent="StateMachine"]
+script = ExtResource("27_hop")
+
 [node name="Perched" type="Node" parent="StateMachine"]
 script = ExtResource("9_perched")
 
@@ -135,3 +141,9 @@ script = ExtResource("24_rest")
 
 [node name="Greeter" type="Node" parent="."]
 script = ExtResource("25_greeter")
+
+[node name="FolderWatcher" type="Node" parent="."]
+script = ExtResource("26_folder")
+
+[node name="WindowDodger" type="Node" parent="."]
+script = ExtResource("28_dodger")

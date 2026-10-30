@@ -109,6 +109,20 @@
 	}
 ],
 "animations": {
+	"dance": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes_happy" } ] },
+			"mouth": { "attachment": [ { "name": "mouth_open" }, { "time": 0.6, "name": "mouth_smile" }, { "time": 1.2, "name": "mouth_open" }, { "time": 1.8, "name": "mouth_smile" } ] }
+		},
+		"bones": {
+			"head": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": 8 }, { "time": 0.6, "value": 0 }, { "time": 0.9, "value": -8 }, { "time": 1.2, "value": 0 }, { "time": 1.5, "value": 8 }, { "time": 1.8, "value": 0 }, { "time": 2.1, "value": -8 }, { "time": 2.4, "value": 0 } ] },
+			"arm_l": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": -120 }, { "time": 0.6, "value": -20 }, { "time": 0.9, "value": -120 }, { "time": 1.2, "value": -20 }, { "time": 1.5, "value": -120 }, { "time": 1.8, "value": -20 }, { "time": 2.1, "value": -120 }, { "time": 2.4, "value": 0 } ] },
+			"arm_r": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": 20 }, { "time": 0.6, "value": 120 }, { "time": 0.9, "value": 20 }, { "time": 1.2, "value": 120 }, { "time": 1.5, "value": 20 }, { "time": 1.8, "value": 120 }, { "time": 2.1, "value": 20 }, { "time": 2.4, "value": 0 } ] },
+			"ear_l": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": -12 }, { "time": 0.6, "value": 0 }, { "time": 1.5, "value": -12 }, { "time": 1.8, "value": 0 } ] },
+			"ear_r": { "rotate": [ { "value": 0 }, { "time": 0.9, "value": 12 }, { "time": 1.2, "value": 0 }, { "time": 2.1, "value": 12 }, { "time": 2.4, "value": 0 } ] },
+			"tail": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": 20 }, { "time": 0.9, "value": -14 }, { "time": 1.5, "value": 20 }, { "time": 2.1, "value": -14 }, { "time": 2.4, "value": 0 } ] }
+		}
+	},
 	"drowsy": {
 		"slots": {
 			"eyes": { "attachment": [ { "name": "eyes_sleepy" }, { "time": 2.2, "name": "eyes_closed" } ] }

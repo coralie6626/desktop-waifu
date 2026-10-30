@@ -6,9 +6,13 @@ class_name ReminderParser
 ## 6pm, 6:30pm, "at 6", noon and midnight, and dates as today, tonight, tomorrow, weekday
 ## names (full or short) and dd/mm or dd/mm/yyyy. A date without a time means 9:00
 ## ("tonight" means 20:00); a time without a date that has already passed today means
-## tomorrow. Everything is local time.
+## tomorrow. Everything is local time. Repeats: "every day"/"daily", "weekdays"/"every
+## weekday", "weekly"/"every week", and "every <weekday>".
 
 const WEEKDAYS: PackedStringArray = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+const REPEAT_DAILY := "daily"
+const REPEAT_WEEKDAYS := "weekdays"
+const REPEAT_WEEKLY := "weekly"
 const DEFAULT_HOUR := 9
 const TONIGHT_HOUR := 20
 
@@ -20,6 +24,8 @@ static var _named_time := _regex("\\b(?:at\\s+)?(noon|midday|midnight)\\b")
 static var _day_word := _regex("\\b(today|tonight|tomorrow|tmrw)\\b")
 static var _weekday := _regex("\\b(?:on\\s+|next\\s+)?(sun|mon|tue|tues|wed|thu|thur|thurs|fri|sat)(?:day|nesday|sday|urday|rsday)?\\b")
 static var _date := _regex("\\b(?:on\\s+)?(\\d{1,2})/(\\d{1,2})(?:/(\\d{2,4}))?\\b")
+static var _repeat := _regex("\\b(every\\s+day|daily|every\\s+weekday|on\\s+weekdays|weekdays|every\\s+week|weekly)\\b")
+static var _every_weekday := _regex("\\bevery\\s+(?=(?:sun|mon|tue|wed|thu|fri|sat))")
 
 
 ## {"text": what to remind about, "due": unix time} or {} if no time was found.
@@ -30,12 +36,13 @@ static func parse(input: String, now: int = -1, tz_bias: Variant = null) -> Dict
 	var bias: int = system_bias() if tz_bias == null else tz_bias
 	var lower := input.to_lower()
 	var spans: Array[Vector2i] = []
+	var repeat := _find_repeat(lower, spans)
 
 	var relative := _relative.search(lower)
 	if relative:
 		spans.append(Vector2i(relative.get_start(), relative.get_end()))
 		var due := now + _relative_seconds(relative)
-		return {"text": _clean(input, spans), "due": due}
+		return {"text": _clean(input, spans), "due": due, "repeat": repeat}
 
 	var local_now := now + bias
 	var today := local_now - posmod(local_now, 86400) # Local midnight, in local seconds.
@@ -110,7 +117,7 @@ static func parse(input: String, now: int = -1, tz_bias: Variant = null) -> Dict
 		due_local = today + time_of_day
 		if due_local <= local_now:
 			due_local += 86400
-	return {"text": _clean(input, spans), "due": due_local - bias}
+	return {"text": _clean(input, spans), "due": due_local - bias, "repeat": repeat}
 
 
 ## A duration like "10", "10 min", "1h 30m", "90 sec" in seconds, or 0 if unreadable.
@@ -223,3 +230,29 @@ static func _regex(pattern: String) -> RegEx:
 	var regex := RegEx.new()
 	regex.compile(pattern)
 	return regex
+
+
+## The repeat rule in `lower` ("daily", "weekdays", "weekly" or ""), recording its span.
+static func _find_repeat(lower: String, spans: Array[Vector2i]) -> String:
+	var m := _repeat.search(lower)
+	if m:
+		spans.append(Vector2i(m.get_start(), m.get_end()))
+		var words := m.get_string(1)
+		if words.contains("weekday"):
+			return REPEAT_WEEKDAYS
+		return REPEAT_DAILY if words.contains("day") else REPEAT_WEEKLY
+	m = _every_weekday.search(lower)
+	if m:
+		spans.append(Vector2i(m.get_start(), m.get_end()))
+		return REPEAT_WEEKLY
+	return ""
+
+
+## The next time a reminder with `repeat` comes round after `due`, past `now`.
+static func next_due(due: int, repeat: String, now: int, tz_bias: Variant = null) -> int:
+	var bias: int = system_bias() if tz_bias == null else tz_bias
+	var step := 7 * 86400 if repeat == REPEAT_WEEKLY else 86400
+	var next := due + step
+	while next <= now or (repeat == REPEAT_WEEKDAYS and Time.get_datetime_dict_from_unix_time(next + bias).weekday in [0, 6]):
+		next += step
+	return next

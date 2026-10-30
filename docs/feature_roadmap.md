@@ -38,6 +38,10 @@ out or swapped for local equivalents.
 | Talk about feelings; Memories gallery with replay (F-2.3, F-2.4) | ✅ | `data/talk/feelings.json`, `MemoriesWindow` |
 | Tuck her in after she dozes off past bedtime; greetings, welcome back, lunch (F-4.3, F-4.4) | ✅ | `SleepSchedule.doze_off()`, `Greeter` |
 | Wardrobe window with live preview; local unlocks, daily streak (F-5.2, F-5.3) | ✅ | `WardrobeWindow`, `Unlocks` autoload, `data/wardrobe/items.json` |
+| Reminders list with edit/delete, repeats (daily, weekdays, weekly) and countdowns (F-3.3) | ✅ | `RemindersWindow`, `ReminderParser.next_due()` |
+| Folder watcher for finished downloads (F-3.5) | ✅ | `FolderWatcher` |
+| Music: media keys from the Talk menu, with a little dance (F-3.6, first step) | 🟡 | `TalkMenu`, `WindowTracker.press_key()` |
+| Hops onto windows, falls off covered title bars, dodges dragged windows (F-4.5) | ✅ | `Hop` state, `WindowTracker.find_hop_target()`, `WindowDodger` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -171,7 +175,7 @@ or from the tray.
 - When due, she walks to the centre, waves (`idle_action`) and shows the reminder in her
   bubble until it's clicked.
 
-### F-3.3 Memos, calendar, recurring alerts (M)
+### F-3.3 Memos, calendar, recurring alerts (M) ✅
 - A list view of reminders with edit and delete, repeat rules (daily, weekdays, weekly)
   and countdowns ("3 days until ...").
 
@@ -179,14 +183,14 @@ or from the tray.
 - Countdown timer and alarm from the Talk menu or tray. She announces when it fires.
   Use a `Timer` plus wall-clock checks so sleep and wake don't break it.
 
-### F-3.5 Folder watcher (M)
+### F-3.5 Folder watcher (M) ✅
 - Watch a chosen folder (e.g. Downloads) and comment when files appear: "Your download
   finished!"
 - Reuse the WindowTracker pattern: a long-lived PowerShell helper with
   `System.IO.FileSystemWatcher` writing events to stdout, read on a worker thread.
   Godot has no file-system watcher of its own.
 
-### F-3.6 Music (M)
+### F-3.6 Music (M) 🟡
 - First step: media keys (play/pause, next, previous) by sending `VK_MEDIA_*` through a
   helper using `keybd_event`. This works with Spotify, browsers and most players.
 - Later: show the current track and react to it, via the Windows
@@ -223,7 +227,7 @@ or from the tray.
 - Good morning, lunch and late-night lines based on the clock, plus "welcome back" after
   the PC was idle or asleep (check for a jump in the system clock).
 
-### F-4.5 Smarter perching (S)
+### F-4.5 Smarter perching (S) ✅
 - Use the existing tracker for: hopping onto the active window on her own now and then;
   refusing title bars that are covered on drop *and* while sitting (currently she stays
   on top); and briefly hiding when a window is dragged over her.

@@ -2,8 +2,9 @@ class_name Greeter
 extends Node
 ## Hellos by time of day (Dialogue triggers greet_morning / greet_afternoon /
 ## greet_evening / greet_night, or missed_you after days away) shortly after she starts,
-## with a word about the daily streak; a lunch nudge once a day; and "welcome back" when
-## the PC wakes from sleep (the wall clock jumps ahead between two frames).
+## with a word about the daily streak and the nearest countdown; a lunch nudge once a
+## day; and "welcome back" when the PC wakes from sleep (the wall clock jumps ahead
+## between two frames).
 
 ## Seconds after startup before she says hello.
 @export var greet_delay := 1.5
@@ -11,6 +12,8 @@ extends Node
 @export var away_minutes := 10.0
 ## Days away that count as "I missed you".
 @export var missed_after_days := 2
+## Seconds after the hello before she mentions a countdown.
+@export var countdown_delay := 4.0
 
 var _last_wall := 0.0
 var _lunch_day := ""
@@ -40,6 +43,17 @@ func greet() -> void:
 		_pet.play_reaction(hello.get("anim", &"happy"))
 	else:
 		_pet.say_line(trigger)
+	_mention_countdown.call_deferred()
+
+
+## After the hello, the nearest countdown (see RemindersWindow): "3 days to go".
+func _mention_countdown() -> void:
+	var reminder := Reminders.next_countdown()
+	if reminder.is_empty():
+		return
+	await get_tree().create_timer(countdown_delay).timeout
+	var left := RemindersWindow.countdown_text(int(reminder.due), int(Time.get_unix_time_from_system()))
+	_pet.say_line(&"countdown", -1.0, {"text": reminder.text, "left": left})
 
 
 func _process(_delta: float) -> void:

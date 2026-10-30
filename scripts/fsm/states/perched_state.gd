@@ -1,7 +1,7 @@
 extends PetState
 ## PERCHED: sitting on the title bar of another app's window (msg: {"window_id": int}).
-## Follows the window when it moves; falls off when it's closed, minimized or moved
-## somewhere she can't sit.
+## Follows the window when it moves; falls off when it's closed, minimized, covered by
+## another window, or moved somewhere she can't sit.
 
 ## How often to re-check where the window is, in seconds.
 @export var poll_interval := 0.1
@@ -52,6 +52,10 @@ func _on_windows_updated() -> void:
 	var x := rect.position.x + _offset_x
 	if rect.position.y < top_range.x or rect.position.y > top_range.y \
 			or x < rect.position.x + pet.perch_margin or x > rect.end.x - pet.perch_margin:
+		_fall_off()
+		return
+	if not pet.window_tracker.is_spot_free(_window_id, x):
+		pet.say_line(&"perch_covered") # Another window was brought in front of hers.
 		_fall_off()
 		return
 	pet.position = Vector2(x, rect.position.y)

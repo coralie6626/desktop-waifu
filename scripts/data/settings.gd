@@ -33,6 +33,8 @@ func _defaults() -> Dictionary[StringName, Variant]:
 		&"games/whitelist": PackedStringArray(),
 		# Executables that never count as games, even full-screen.
 		&"games/blacklist": PackedStringArray(),
+		# A folder she watches for new files (e.g. finished downloads); "" for none.
+		&"tools/watch_folder": "",
 	}
 
 
