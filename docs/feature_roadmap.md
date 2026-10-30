@@ -16,7 +16,9 @@ out or swapped for local equivalents.
 | Sit on the taskbar | ✅ | `SittingState` |
 | Sit on other windows' title bars, follow them, fall off when they close | ✅ | `PerchedState`, `WindowTracker` |
 | Speech bubble with random lines | ✅ | `SpeechBubble`, `DesktopPet.say_random_line()` |
-| Right-click context menu (Talk / Sit / Quit) | ✅ | `DesktopPet._build_context_menu()` |
+| Right-click context menu (Talk / Sit / Hide / Quit) | ✅ | `DesktopPet._build_context_menu()` |
+| Tray icon: left-click shows or hides her, right-click opens a menu (F-0.2) | ✅ | `TrayIcon` |
+| Click, double-click and drag told apart (F-0.3) | ✅ | `PetGestures` |
 | Spine skeleton with idle, wave, walk, drag, fall, sit | ✅ | `assets/characters/waifu/` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
@@ -34,13 +36,13 @@ Most later features depend on these, so they come first.
   notes, reminders.
 - Emit a `changed(key)` signal so open menus and the pet update live.
 
-### F-0.2 System tray icon (M)
+### F-0.2 System tray icon (M) ✅
 - Use Godot's `StatusIndicator` node (Windows supported) with a `PopupMenu`.
 - This is where settings live when she's hidden or click-through is on, and where the
   menus in F-S1 go.
 - Left-click the tray icon to show or hide her.
 
-### F-0.3 Tell click, double-click and drag apart (S)
+### F-0.3 Tell click, double-click and drag apart (S) ✅
 - Right now any left press on her starts a drag at once. Change `PetState.handle_input`
   so a press only becomes a pickup after the cursor moves past a few pixels or the button
   is held for about 150 ms.
@@ -250,8 +252,11 @@ Quit
   startup.
 
 ### F-W2 Click-through mode (S)
-- When on, pass an empty polygon to `DisplayServer.window_set_mouse_passthrough` so the
-  whole window ignores clicks. She can only be reached from the tray.
+- When on, the whole window ignores clicks and she can only be reached from the tray.
+- An empty passthrough polygon doesn't do this: Godot treats it as "no region", which
+  makes the whole window clickable. And on Windows the region also clips what's drawn,
+  so a tiny region would hide her too (that's how hiding from the tray works). This
+  needs `WS_EX_TRANSPARENT` set on the window through a helper instead.
 
 ### F-W3 Multiple monitors (L)
 - Option A: one overlay window per monitor, with the pet handed between them when

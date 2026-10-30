@@ -9,9 +9,11 @@ extends Node
 var _last_rects: Array[Rect2] = []
 
 @onready var pet: DesktopPet = $DesktopPet
+@onready var tray: TrayIcon = $TrayIcon
 
 
 func _ready() -> void:
+	tray.pet = pet
 	if Engine.is_embedded_in_editor():
 		push_warning("Running embedded in the editor's Game tab: transparency and click-through " +
 			"won't work. Disable 'Embed Game on Next Play' in the Game tab and run again.")
@@ -60,6 +62,10 @@ func _update_passthrough() -> void:
 ## Windows accepts a single passthrough polygon, and everything outside it is clipped
 ## visually as well (SetWindowRgn) — so the bubble must be part of the same outline.
 func _build_polygon(rects: Array[Rect2]) -> PackedVector2Array:
+	if rects.is_empty():
+		# An empty polygon would make the whole window clickable again, so use a speck
+		# outside the window: nothing is left to click or see.
+		return _rect_to_polygon(Rect2(-2, -2, 1, 1))
 	var polygon := _rect_to_polygon(rects[0])
 	for i in range(1, rects.size()):
 		var merged := Geometry2D.merge_polygons(polygon, _rect_to_polygon(rects[i]))
