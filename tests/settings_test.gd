@@ -5,19 +5,11 @@ extends Node
 ## godot --headless res://tests/settings_test.tscn (exit code 1 on failure).
 ## Settings it touches are put back afterwards.
 
-const SAVED_SETTINGS: Array[StringName] = [
-	&"audio/voice_volume", &"audio/sfx_volume", &"window/always_on_top", &"window/click_through",
-	&"schedule/bedtime", &"schedule/wake_time", &"schedule/rest_reminder_minutes",
-	&"games/whitelist", &"games/blacklist",
-]
-
 var _failures := 0
 
 
 func _ready() -> void:
-	var saved := {}
-	for key in SAVED_SETTINGS:
-		saved[key] = Settings.get_value(key)
+	var stores := [SaveData.snapshot(), Settings.snapshot()]
 	Settings.set_value(&"schedule/bedtime", "")
 
 	_test_audio()
@@ -26,9 +18,11 @@ func _ready() -> void:
 	_test_games_window()
 	await _test_rest_nudge()
 
-	for key in SAVED_SETTINGS:
-		Settings.set_value(key, saved[key])
-	Settings.flush()
+	# Let anything still pending (deferred calls, a queued announcement) happen first.
+	for i in 2:
+		await get_tree().process_frame
+	SaveData.restore(stores[0])
+	Settings.restore(stores[1])
 	if _failures == 0:
 		print("All settings checks passed.")
 	else:

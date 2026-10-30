@@ -47,7 +47,10 @@ func _on_clicked(position: Vector2) -> void:
 		_pet.bubble.hide_message() # Clicking her dismisses a reminder too.
 		return
 	if _pet.state_machine.current_state.name == PetStateMachine.SLEEPING:
-		_pet.say_line(&"sleep_disturbed") # Only half wakes up.
+		if _pet.is_dozing():
+			_pet.tuck_in() # Clicking her when she dozed off without a blanket.
+		else:
+			_pet.say_line(&"sleep_disturbed") # Only half wakes up.
 		return
 	if is_annoyed():
 		_pet.say_line(&"annoyed")

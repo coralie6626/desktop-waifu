@@ -54,3 +54,7 @@ pillow
 bounds: 240,220,84,30
 blanket
 bounds: 0,280,124,68
+beret
+bounds: 130,280,64,36
+sunglasses
+bounds: 200,280,56,22

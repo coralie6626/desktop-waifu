@@ -81,5 +81,17 @@
 	"rest": ["Time for a little break! Stand up and stretch~", "Hey, drink some water!", "Your eyes need a rest. Look at something far away for a bit.", "Shoulders down, back straight! ...Okay, now stretch."],
 	"goodbye": ["Okay, I'll be in the tray if you need me!", "Bye-bye~ Click the tray icon to call me."],
 	"goodbye_timed": ["Okay! I'll be back in half an hour.", "See you in 30 minutes~"],
-	"welcome_back": { "anim": "happy", "lines": ["I'm back! Did you miss me?", "Tadaa~ I'm back!"] }
+	"welcome_back": { "anim": "happy", "lines": ["I'm back! Did you miss me?", "Tadaa~ I'm back!"] },
+
+	"greet_morning": { "anim": "happy", "lines": ["Good morning! Let's have a nice day~", "Morning! Did you sleep well?"] },
+	"greet_afternoon": { "anim": "happy", "lines": ["Hi there! Good afternoon~", "Oh, hello! How's the afternoon going?"] },
+	"greet_evening": { "anim": "happy", "lines": ["Good evening! Long day?", "Hi! Evenings are cosy, aren't they?"] },
+	"greet_night": { "anim": "surprised", "lines": ["It's so late! ...Hi anyway~", "Up this late? Okay, I'll keep you company."] },
+	"missed_you": { "anim": "happy", "lines": ["You're back! It's been {days} days... I missed you!", "Where were you? {days} whole days!"] },
+	"streak": ["That's {days} days in a row!", "{days} days in a row~"],
+	"welcome_back_pc": { "anim": "happy", "lines": ["Oh, welcome back!", "You're back! I was waiting~"] },
+	"lunch": ["It's lunchtime! Go eat something good~", "Lunch break! Don't skip it!"],
+	"dozed_off": ["Zzz... *mumble*... not sleepy...", "*nods off*"],
+	"tucked_in": { "anim": "drowsy", "lines": ["Mmh... warm... thank you...", "*snuggles* ...g'night..."] },
+	"new_item": { "anim": "happy", "lines": ["Ooh! I unlocked something new for the wardrobe: {item}!", "Look! {item} is in my wardrobe now~"] }
 }

@@ -7,7 +7,7 @@ extends StatusIndicator
 ## buttons arrive through the pressed signal and left-click stays free for the toggle.
 
 enum MenuId {
-	TOGGLE, NOTES, SCHEDULE, GAMES, ALWAYS_ON_TOP, CLICK_THROUGH, HIDE_30, HIDE_UNTIL_RESTART, QUIT,
+	TOGGLE, NOTES, WARDROBE, SCHEDULE, GAMES, ALWAYS_ON_TOP, CLICK_THROUGH, HIDE_30, HIDE_UNTIL_RESTART, QUIT,
 }
 
 ## Volume steps offered in the Volume submenus, in percent.
@@ -40,6 +40,7 @@ func _ready() -> void:
 	_add_submenu(_menu, _time_menu, "Keep time for me")
 	_menu.add_separator()
 
+	_character_menu.add_item("Wardrobe...", MenuId.WARDROBE)
 	_character_menu.add_item("Schedule...", MenuId.SCHEDULE)
 	_add_submenu(_menu, _character_menu, "Character")
 
@@ -99,6 +100,8 @@ func _on_menu_id_pressed(id: int) -> void:
 			_toggle_pet()
 		MenuId.NOTES:
 			Desk.open_notes()
+		MenuId.WARDROBE:
+			Desk.open_wardrobe()
 		MenuId.SCHEDULE:
 			Desk.open_schedule()
 		MenuId.GAMES:

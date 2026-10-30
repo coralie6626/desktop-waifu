@@ -22,5 +22,6 @@ static func record(mood: String) -> void:
 	var first_today := not history.has(date)
 	history[date] = mood
 	SaveData.set_value(&"talk/mood_history", history)
+	SaveData.unlock_memory("first_checkin")
 	if first_today:
 		Affection.add(CHECK_IN_AFFECTION)

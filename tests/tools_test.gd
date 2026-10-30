@@ -11,7 +11,7 @@ var _failures := 0
 
 
 func _ready() -> void:
-	var saved_reminders: Variant = SaveData.get_value(&"tools/reminders")
+	var stores := [SaveData.snapshot(), Settings.snapshot()]
 	var saved_notes := NotesWindow.load_notes()
 	var had_notes := FileAccess.file_exists(NotesWindow.PATH)
 	Reminders.clear()
@@ -22,8 +22,11 @@ func _ready() -> void:
 	_test_notes(saved_notes)
 	await _test_announcement()
 
-	SaveData.set_value(&"tools/reminders", saved_reminders)
-	SaveData.flush()
+	# Let anything still pending (deferred calls, a queued announcement) happen first.
+	for i in 2:
+		await get_tree().process_frame
+	SaveData.restore(stores[0])
+	Settings.restore(stores[1])
 	if had_notes:
 		_write_notes(saved_notes)
 	else:
@@ -147,6 +150,7 @@ func _test_announcement() -> void:
 	Reminders.add("hidden test", int(Time.get_unix_time_from_system()) - 1)
 	Reminders.check_due()
 	_check("a reminder brings her back from hiding", pet.visible)
+	pet.announcer._queue.clear()
 	pet.queue_free()
 
 

@@ -1,13 +1,15 @@
 extends Node
-## Autoload `Desk`: owns the tool windows (Notes, Schedule, Game whitelist, and the
-## one-line box used for custom timers, alarms and reminders) so the Talk menu and the
-## tray share them. They're children of an autoload rather than of a menu, so they stay
-## open after a menu closes.
+## Autoload `Desk`: owns the tool windows (Notes, Schedule, Game whitelist, Wardrobe,
+## Memories, and the one-line box used for custom timers, alarms and reminders) so the
+## Talk menu and the tray share them. They're children of an autoload rather than of a
+## menu, so they stay open after a menu closes.
 
 var notes := NotesWindow.new()
 var quick_add := QuickAddWindow.new()
 var schedule := ScheduleWindow.new()
 var games := GamesWindow.new()
+var wardrobe := WardrobeWindow.new()
+var memories := MemoriesWindow.new()
 
 
 func _ready() -> void:
@@ -15,6 +17,8 @@ func _ready() -> void:
 	add_child(quick_add)
 	add_child(schedule)
 	add_child(games)
+	add_child(wardrobe)
+	add_child(memories)
 
 
 func _exit_tree() -> void:
@@ -27,6 +31,16 @@ func open_schedule() -> void:
 
 func open_games(last_app := "") -> void:
 	games.open(last_app)
+
+
+func open_wardrobe() -> void:
+	wardrobe.open()
+
+
+## `pet` replays the memory picked.
+func open_memories(pet: DesktopPet) -> void:
+	memories.pet = pet
+	memories.open()
 
 
 func open_notes() -> void:

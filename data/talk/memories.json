@@ -1,0 +1,48 @@
+{
+	"_comment": "Milestones for the Memories gallery, in the order they're listed. Each is unlocked by SaveData.unlock_memory(id) somewhere in the code and can be replayed: \"steps\" are in the Conversation format (see mood_checkin.json). Snack Time topics are listed separately, from talk/unlocked_topics.",
+	"memories": [
+		{ "id": "first_headpat", "title": "The first headpat", "steps": [
+			{ "say": "Remember the first time you patted my head?", "anim": "shy" },
+			{ "say": "I was so surprised... but it felt really nice.", "anim": "happy" }
+		] },
+		{ "id": "first_perch", "title": "A view from a window", "steps": [
+			{ "say": "The first time you put me on top of a window, I was a bit scared!", "anim": "surprised" },
+			{ "say": "Now it's one of my favourite spots." }
+		] },
+		{ "id": "first_checkin", "title": "\"How was your day?\"", "steps": [
+			{ "say": "You told me about your day for the first time.", "anim": "happy" },
+			{ "say": "I like knowing how you're doing. Keep telling me, okay?" }
+		] },
+		{ "id": "first_snack", "title": "Our first snack break", "steps": [
+			{ "say": "Cookies, tea, and a chat with you. Our first snack time!", "anim": "happy" }
+		] },
+		{ "id": "first_reminder", "title": "My first reminder", "steps": [
+			{ "say": "The first time you trusted me to remind you of something!", "anim": "happy" },
+			{ "say": "I take this job very seriously, you know." }
+		] },
+		{ "id": "first_sleep", "title": "Good night", "steps": [
+			{ "say": "The first night you let me go to bed...", "anim": "shy" },
+			{ "say": "I dreamt about the desktop. Weird, right?" }
+		] },
+		{ "id": "first_tuck_in", "title": "Tucked in", "steps": [
+			{ "say": "You tucked me in when I fell asleep without a blanket.", "anim": "shy" },
+			{ "say": "...Thank you. That was really sweet." }
+		] },
+		{ "id": "first_feelings", "title": "Talking about feelings", "steps": [
+			{ "say": "You told me how you were really feeling.", "anim": "shy" },
+			{ "say": "That takes courage. I'm glad you did." }
+		] },
+		{ "id": "affection_level_1", "title": "Friends", "steps": [
+			{ "say": "This is when I started to really like it here.", "anim": "happy" }
+		] },
+		{ "id": "affection_level_2", "title": "Getting close", "steps": [
+			{ "say": "You're really nice to me, you know?", "anim": "happy" }
+		] },
+		{ "id": "affection_level_3", "title": "Always happy with you", "steps": [
+			{ "say": "I'm always happy when you're around. Still true!", "anim": "happy" }
+		] },
+		{ "id": "affection_level_4", "title": "Devoted", "steps": [
+			{ "say": "I really, really like spending time with you.", "anim": "shy" }
+		] }
+	]
+}

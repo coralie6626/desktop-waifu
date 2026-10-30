@@ -24,6 +24,7 @@
 [ext_resource type="Script" path="res://scripts/pet/sleep_schedule.gd" id="22_schedule"]
 [ext_resource type="Script" path="res://scripts/pet/game_watcher.gd" id="23_games"]
 [ext_resource type="Script" path="res://scripts/pet/rest_nudge.gd" id="24_rest"]
+[ext_resource type="Script" path="res://scripts/pet/greeter.gd" id="25_greeter"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -131,3 +132,6 @@ script = ExtResource("23_games")
 
 [node name="RestNudge" type="Node" parent="."]
 script = ExtResource("24_rest")
+
+[node name="Greeter" type="Node" parent="."]
+script = ExtResource("25_greeter")

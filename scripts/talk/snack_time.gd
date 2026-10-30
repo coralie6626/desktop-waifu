@@ -52,6 +52,7 @@ static func finish(id: String) -> void:
 		unlocked.append(id)
 		SaveData.set_value(&"talk/unlocked_topics", unlocked)
 	Affection.add(TOPIC_AFFECTION)
+	SaveData.unlock_memory("first_snack")
 
 
 ## Picks today's offer the first time it's needed each day.

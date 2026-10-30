@@ -29,6 +29,12 @@ func _defaults() -> Dictionary[StringName, Variant]:
 		&"talk/snack_done": PackedStringArray(),
 		# Each reminder is a Dictionary; its fields are defined by the reminders feature.
 		&"tools/reminders": [],
+		# Wardrobe items already announced as unlocked (see Unlocks).
+		&"wardrobe/seen": PackedStringArray(),
+		# Days in a row she's been run: the last day, the current streak and the best one.
+		&"stats/last_day": "",
+		&"stats/streak": 0,
+		&"stats/best_streak": 0,
 	}
 
 

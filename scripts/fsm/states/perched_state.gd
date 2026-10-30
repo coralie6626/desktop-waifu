@@ -25,6 +25,7 @@ func enter(msg: Dictionary = {}) -> void:
 	pet.play_anim(&"sit")
 	_poll_left = poll_interval
 	pet.window_tracker.updated.connect(_on_windows_updated)
+	SaveData.unlock_memory("first_perch")
 	if randf() < talk_chance:
 		pet.say_line(&"perch")
 
