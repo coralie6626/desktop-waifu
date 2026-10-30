@@ -113,6 +113,38 @@ foreach ($c in @(14, 50)) {
 }
 Add-Region 'blush' $x $y 64 14
 
+# --- Snack Time props --------------------------------------------------------------
+# Cushion she sits on: a plump pink oval with a lighter top and a button.
+$x = 0; $y = 186
+$cushion = Color 244 150 170
+$cushionTop = Color 255 196 208
+$g.FillEllipse((Brush $cushion), $x + 2, $y + 4, 92, 24)
+$g.FillEllipse((Brush $cushionTop), $x + 8, $y + 5, 80, 14)
+$g.DrawEllipse((Pen $outline 2), $x + 2, $y + 4, 92, 24)
+$g.FillEllipse((Brush (Color 230 120 145)), $x + 45, $y + 10, 6, 4)
+foreach ($t in @(2, 94)) { $g.FillEllipse((Brush $cushion), $x + $t - 3, $y + 13, 6, 6) } # tassels
+Add-Region 'cushion' $x $y 96 30
+
+# Snack: a plate of cookies and a cup of tea.
+$x = 100; $y = 186
+$g.FillEllipse((Brush $white), $x + 1, $y + 16, 30, 8)
+$g.DrawEllipse((Pen $outline 1.4), $x + 1, $y + 16, 30, 8)
+$cookie = Color 214 160 96
+foreach ($c in @(@(6, 11), @(15, 9), @(12, 14))) {
+	$g.FillEllipse((Brush $cookie), $x + $c[0], $y + $c[1], 11, 7)
+	$g.DrawEllipse((Pen (Color 150 100 60) 1), $x + $c[0], $y + $c[1], 11, 7)
+	$g.FillEllipse((Brush (Color 110 70 40)), $x + $c[0] + 4, $y + $c[1] + 2, 2, 2)
+}
+$g.FillRectangle((Brush $white), $x + 34, $y + 8, 11, 13)
+$g.FillEllipse((Brush $white), $x + 34, $y + 17, 11, 6)
+$g.FillEllipse((Brush (Color 190 120 80)), $x + 35, $y + 6, 9, 4)
+$g.DrawLine((Pen $outline 1.4), $x + 34, $y + 8, $x + 34, $y + 20)
+$g.DrawLine((Pen $outline 1.4), $x + 45, $y + 8, $x + 45, $y + 20)
+$g.DrawEllipse((Pen $outline 1.4), $x + 34, $y + 6, 11, 4)
+$g.DrawArc((Pen $outline 1.4), $x + 34, $y + 16, 11, 7, 0, 180)
+$g.DrawArc((Pen $outline 1.4), $x + 43, $y + 10, 6, 7, 270, 180) # handle
+Add-Region 'snack' $x $y 52 26
+
 $g.Dispose()
 $sheet.Save((Join-Path $outDir 'waifu.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $sheet.Dispose()

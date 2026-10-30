@@ -6,11 +6,6 @@ extends PetState
 ## How often to re-check where the window is, in seconds.
 @export var poll_interval := 0.1
 @export_range(0.0, 1.0) var talk_chance := 0.5
-@export var perch_lines: PackedStringArray = [
-	"Nice view from up here!",
-	"This window is comfy~",
-	"Don't close this one, okay?",
-]
 
 var _window_id := 0
 ## Feet position relative to the window's left edge, so she rides along when it moves.
@@ -31,7 +26,7 @@ func enter(msg: Dictionary = {}) -> void:
 	_poll_left = poll_interval
 	pet.window_tracker.updated.connect(_on_windows_updated)
 	if randf() < talk_chance:
-		pet.say_random_line(perch_lines)
+		pet.say_line(&"perch")
 
 
 func exit() -> void:

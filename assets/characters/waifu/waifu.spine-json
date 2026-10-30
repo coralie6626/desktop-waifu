@@ -14,6 +14,8 @@
 	{ "name": "ear_r", "parent": "head", "x": 22, "y": 62, "rotation": -20 }
 ],
 "slots": [
+	{ "name": "cushion", "bone": "root" },
+	{ "name": "snack", "bone": "root" },
 	{ "name": "tail", "bone": "tail", "attachment": "tail" },
 	{ "name": "hair_back", "bone": "head", "attachment": "hair_back" },
 	{ "name": "ear_l", "bone": "ear_l", "attachment": "ear" },
@@ -34,6 +36,8 @@
 	{
 		"name": "default",
 		"attachments": {
+			"cushion": { "cushion": { "y": 10, "width": 96, "height": 30 } },
+			"snack": { "snack": { "x": 64, "y": 12, "width": 52, "height": 26 } },
 			"tail": { "tail": { "x": 15, "y": -22, "width": 30, "height": 44 } },
 			"hair_back": { "hair_back": { "y": 17, "width": 92, "height": 110 } },
 			"ear_l": { "ear": { "y": 14, "width": 26, "height": 34 } },
@@ -63,6 +67,31 @@
 	}
 ],
 "animations": {
+	"snack": {
+		"slots": {
+			"cushion": { "attachment": [ { "name": "cushion" } ] },
+			"snack": { "attachment": [ { "name": "snack" } ] },
+			"eyes": { "attachment": [ { "name": "eyes" }, { "time": 0.6, "name": "eyes_closed" }, { "time": 0.72, "name": "eyes" }, { "time": 1.35, "name": "eyes_happy" }, { "time": 1.95, "name": "eyes" } ] },
+			"mouth": { "attachment": [ { "name": "mouth_smile" }, { "time": 1.4, "name": "mouth_open" }, { "time": 1.55, "name": "mouth_smile" }, { "time": 1.65, "name": "mouth_open" }, { "time": 1.8, "name": "mouth_smile" } ] }
+		},
+		"bones": {
+			"hip": { "translate": [ { "x": 0, "y": -6 }, { "time": 3, "x": 0, "y": -6 } ] },
+			"leg_l": {
+				"scale": [ { "x": 1, "y": 0.5 }, { "time": 3, "x": 1, "y": 0.5 } ],
+				"rotate": [ { "value": -10 }, { "time": 1.5, "value": -4 }, { "time": 3, "value": -10 } ]
+			},
+			"leg_r": {
+				"scale": [ { "x": 1, "y": 0.5 }, { "time": 3, "x": 1, "y": 0.5 } ],
+				"rotate": [ { "value": 10 }, { "time": 1.5, "value": 4 }, { "time": 3, "value": 10 } ]
+			},
+			"torso": { "scale": [ { "x": 1, "y": 1 }, { "time": 1.5, "x": 1, "y": 1.03 }, { "time": 3, "x": 1, "y": 1 } ] },
+			"head": { "rotate": [ { "value": 3 }, { "time": 1.3, "value": -3 }, { "time": 1.9, "value": -3 }, { "time": 3, "value": 3 } ] },
+			"arm_l": { "rotate": [ { "value": 20 }, { "time": 3, "value": 20 } ] },
+			"arm_r": { "rotate": [ { "value": -20 }, { "time": 1, "value": -20 }, { "time": 1.3, "value": -140 }, { "time": 1.85, "value": -140 }, { "time": 2.15, "value": -20 }, { "time": 3, "value": -20 } ] },
+			"ear_l": { "rotate": [ { "value": 0 }, { "time": 1.4, "value": 0 }, { "time": 1.5, "value": -12 }, { "time": 1.62, "value": 0 }, { "time": 3, "value": 0 } ] },
+			"tail": { "rotate": [ { "value": 45 }, { "time": 1.5, "value": 58 }, { "time": 3, "value": 45 } ] }
+		}
+	},
 	"pat": {
 		"slots": {
 			"eyes": { "attachment": [ { "name": "eyes_happy" } ] },

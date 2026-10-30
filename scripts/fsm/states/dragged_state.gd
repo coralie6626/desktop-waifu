@@ -20,6 +20,7 @@ func enter(msg: Dictionary = {}) -> void:
 	_grab_offset = msg.get("grab_offset", Vector2.ZERO)
 	_poll_left = 0.0
 	pet.stop_reaction()
+	pet.conversation.cancel()
 	if msg.get("falling", false):
 		# Deferred so we don't start another transition from inside this one.
 		_drop_queued = true
@@ -27,7 +28,7 @@ func enter(msg: Dictionary = {}) -> void:
 		return
 	pet.play_anim(&"drag")
 	if randf() < complain_chance:
-		pet.say_random_line(pet.grab_lines)
+		pet.say_line(&"grab")
 
 
 func exit() -> void:

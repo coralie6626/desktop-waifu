@@ -4,6 +4,9 @@ extends PanelContainer
 ## It positions itself in window coordinates above `head_position`, which the pet
 ## updates every frame, and stays clamped inside the screen.
 
+## Emitted when a message goes away: its timer ran out, it was clicked, or hide_message().
+signal closed
+
 @export var max_text_width := 240.0
 @export var min_duration := 2.0
 @export var seconds_per_char := 0.07
@@ -70,6 +73,7 @@ func hide_message() -> void:
 	_tween = create_tween()
 	_tween.tween_property(self, "modulate:a", 0.0, 0.2)
 	_tween.tween_callback(hide)
+	closed.emit()
 
 
 func _reposition() -> void:

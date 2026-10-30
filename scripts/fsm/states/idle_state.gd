@@ -17,8 +17,8 @@ func enter(_msg: Dictionary = {}) -> void:
 
 
 func update(delta: float) -> void:
-	if pet.gestures.is_patting():
-		return # Hold still while being patted.
+	if pet.is_busy():
+		return # Hold still while being patted or talked to.
 	_wait -= delta
 	if _wait > 0.0:
 		return
@@ -28,14 +28,14 @@ func update(delta: float) -> void:
 	if roll < wander_chance:
 		machine.transition_to(PetStateMachine.WANDER)
 	elif roll < wander_chance + talk_chance:
-		pet.say_random_line()
+		pet.say_line(&"idle")
 	else:
 		_play_idle_action()
 
 
 func _play_idle_action() -> void:
 	if not pet.has_anim(&"idle_action"):
-		pet.say_random_line()
+		pet.say_line(&"idle")
 		return
 	# "idle_action" must be listed in pet.one_shot_anims, otherwise animation_finished never fires.
 	pet.play_anim(&"idle_action")

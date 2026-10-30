@@ -15,8 +15,8 @@ out or swapped for local equivalents.
 | Drag-and-drop the character | ✅ | `DraggedState` |
 | Sit on the taskbar | ✅ | `SittingState` |
 | Sit on other windows' title bars, follow them, fall off when they close | ✅ | `PerchedState`, `WindowTracker` |
-| Speech bubble with random lines | ✅ | `SpeechBubble`, `DesktopPet.say_random_line()` |
-| Right-click context menu (Talk / Sit / Hide / Quit) | ✅ | `DesktopPet._build_context_menu()` |
+| Speech bubble with random lines | ✅ | `SpeechBubble`, `DesktopPet.say_line()` |
+| Right-click context menu (Talk… / Sit / Hide / Quit) | ✅ | `DesktopPet._build_context_menu()` |
 | Tray icon: left-click shows or hides her, right-click opens a menu (F-0.2) | ✅ | `TrayIcon` |
 | Click, double-click and drag told apart (F-0.3) | ✅ | `PetGestures` |
 | Spine skeleton with idle, wave, walk, drag, fall, sit | ✅ | `assets/characters/waifu/` |
@@ -24,6 +24,9 @@ out or swapped for local equivalents.
 | Expressions: eye and mouth variants, blush; `pat`, `happy`, `shy`, `surprised`, `pout` (F-0.6) | ✅ | `tools/build_atlas.ps1`, reaction track in `DesktopPet` |
 | Headpats, per-part click reactions, annoyance (F-1.1, F-1.2) | ✅ | `PetGestures`, `PetReactions` |
 | Affection with levels, daily gain cap and neglect (F-2.5) | ✅ | `Affection` autoload |
+| Dialogue lines in data files with conditions (F-0.5) | ✅ | `data/dialogue/lines.json`, `Dialogue` autoload |
+| Talk menu on double-click, scripted conversations with choices (F-1.3) | ✅ | `TalkMenu`, `Conversation`, `ChoiceMenu` |
+| Snack Time with daily topics, mood check-in (F-2.1, F-2.2) | ✅ | `SnackTime`, `Mood`, `data/talk/` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -65,7 +68,7 @@ Most later features depend on these, so they come first.
   boxes are defined per bone in `BodyParts.REGIONS` and placed with
   `SpineSprite.get_global_bone_transform()`.
 
-### F-0.5 Dialogue data (S)
+### F-0.5 Dialogue data (S) ✅
 - Move lines out of `@export` arrays into data files, e.g. `res://data/dialogue/*.json`,
   keyed by trigger (`idle`, `grab`, `pat`, `poke_face`, `perch`, `morning`, ...).
 - Support conditions (time of day, affection level, mood, outfit) and an optional
@@ -102,7 +105,7 @@ Most later features depend on these, so they come first.
 - Skirt and chest clicks get a flustered or pouty reaction. Poking her face too often
   makes her annoyed for a while.
 
-### F-1.3 Double-click opens the Talk menu (S)
+### F-1.3 Double-click opens the Talk menu (S) ✅
 - Double-click opens the Talk menu (Phase 2) next to her, in place of the current
   right-click menu's "Say something".
 - The menu is a separate window, like `ContextMenu`, so it isn't clipped by the
@@ -117,7 +120,7 @@ Most later features depend on these, so they come first.
 A themed menu (a `PopupMenu` or a small `Window` with buttons) opened by double-click
 or from the tray.
 
-### F-2.1 Snack Time (M)
+### F-2.1 Snack Time (M) ✅
 - She plays the `sit` pose next to a cushion or sofa prop (a Spine slot, so the wardrobe
   can change it).
 - Offers up to N daily conversation topics. Each topic is a short scripted dialogue
@@ -125,7 +128,7 @@ or from the tray.
 - The topic pool rotates daily (seeded by date), and seen topics unlock in Memories
   (F-2.4).
 
-### F-2.2 Mood check-in: "How was your day?" (S)
+### F-2.2 Mood check-in: "How was your day?" (S) ✅
 - 3–5 answers (great, okay, tired, stressed, bad), each with a fitting reply.
 - Store one entry per day in `save.json` for a simple mood history.
 

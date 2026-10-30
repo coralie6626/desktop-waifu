@@ -22,6 +22,11 @@ func _defaults() -> Dictionary[StringName, Variant]:
 		&"talk/memories": {},
 		# One answer per day from the mood check-in: {"YYYY-MM-DD": "great" | "okay" | ...}.
 		&"talk/mood_history": {},
+		# Snack Time (see SnackTime): the day the offer is for, the topic ids offered, and
+		# those already talked about that day.
+		&"talk/snack_day": "",
+		&"talk/snack_offer": PackedStringArray(),
+		&"talk/snack_done": PackedStringArray(),
 		# Each reminder is a Dictionary; its fields are defined by the reminders feature.
 		&"tools/reminders": [],
 	}
