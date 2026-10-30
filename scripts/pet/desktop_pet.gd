@@ -139,6 +139,7 @@ func _on_double_clicked(_position: Vector2) -> void:
 
 func say_message(text: String, duration: float = -1.0) -> void:
 	bubble.say_message(text, duration)
+	Sound.blip()
 
 
 ## Says a line for `trigger` from Dialogue, with its reaction; `args` fill {placeholders}.

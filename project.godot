@@ -25,6 +25,7 @@ Affection="*res://scripts/data/affection.gd"
 Dialogue="*res://scripts/talk/dialogue.gd"
 Reminders="*res://scripts/tools/reminders.gd"
 Desk="*res://scripts/tools/desk.gd"
+Sound="*res://scripts/data/sound.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]

@@ -76,5 +76,10 @@
 	"bedtime_stay": { "anim": "pout", "lines": ["Okay... just a little longer.", "Mmh, fine. But I'm asking again soon!"] },
 	"sleep_disturbed": { "anim": "drowsy", "lines": ["Mmh...? Five more minutes...", "*mumble* ...it's late, you should sleep too...", "Zzz... huh? ...zzz."] },
 	"wake_up": { "anim": "happy", "lines": ["Good morning! *stretch*", "Mmmh, morning already? Good morning~"] },
-	"woken_up": { "anim": "surprised", "lines": ["Wha-! I'm up, I'm up!", "Hey, I was sleeping..."] }
+	"woken_up": { "anim": "surprised", "lines": ["Wha-! I'm up, I'm up!", "Hey, I was sleeping..."] },
+
+	"rest": ["Time for a little break! Stand up and stretch~", "Hey, drink some water!", "Your eyes need a rest. Look at something far away for a bit.", "Shoulders down, back straight! ...Okay, now stretch."],
+	"goodbye": ["Okay, I'll be in the tray if you need me!", "Bye-bye~ Click the tray icon to call me."],
+	"goodbye_timed": ["Okay! I'll be back in half an hour.", "See you in 30 minutes~"],
+	"welcome_back": { "anim": "happy", "lines": ["I'm back! Did you miss me?", "Tadaa~ I'm back!"] }
 }

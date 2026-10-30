@@ -70,8 +70,8 @@ func ask_to_sleep() -> void:
 
 ## The phase for the current time and settings.
 static func current_phase() -> Phase:
-	var bedtime := _minutes(Settings.get_value(&"schedule/bedtime"))
-	var wake := _minutes(Settings.get_value(&"schedule/wake_time"))
+	var bedtime := parse_clock(Settings.get_value(&"schedule/bedtime"))
+	var wake := parse_clock(Settings.get_value(&"schedule/wake_time"))
 	if bedtime < 0 or wake < 0:
 		return Phase.DAY
 	var clock := Time.get_time_dict_from_system()
@@ -108,7 +108,7 @@ static func _in_span(minute: int, from: int, to: int) -> bool:
 
 
 ## "HH:MM" as minutes since midnight, or -1 if empty or unreadable.
-static func _minutes(text: String) -> int:
+static func parse_clock(text: String) -> int:
 	var parts := text.strip_edges().split(":")
 	if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 		return -1

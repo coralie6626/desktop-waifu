@@ -4,7 +4,8 @@ extends Node
 ## title bars (Windows only; elsewhere the snapshot just stays empty).
 ## Win32 isn't reachable from GDScript, so a small PowerShell helper does the
 ## EnumWindows call. It's started once, lives for the whole session and answers a
-## "list" request on stdin with one JSON line. Requests run on a worker thread so the
+## "list" request on stdin with one JSON line (it also sets click-through on our own
+## window, see set_click_through). Requests run on a worker thread so the
 ## pet never stalls while PowerShell starts up or answers.
 
 ## Emitted on the main thread whenever `windows` has been refreshed.
@@ -16,11 +17,16 @@ var windows: Array[Dictionary] = []
 ## The window in front as {"exe": "name.exe", "fullscreen": bool}, or {} when it's the
 ## desktop or taskbar. Clicking the pet doesn't count: it keeps the previous value.
 var foreground: Dictionary = {}
+## The executable of the last app that was in front (not us, not the desktop), or "".
+var last_app := ""
 
 var _pid := -1
 var _stdio: FileAccess
 var _thread: Thread
 var _semaphore := Semaphore.new()
+var _mutex := Mutex.new()
+## Lines waiting to be sent to the helper ("list", "clickthrough <hwnd> <0|1>").
+var _commands := PackedStringArray()
 var _pending := false
 var _quitting := false
 
@@ -42,6 +48,8 @@ public static class PetWindows {
 	[DllImport("user32.dll")] static extern bool IsWindowVisible(IntPtr hwnd);
 	[DllImport("user32.dll")] static extern bool IsIconic(IntPtr hwnd);
 	[DllImport("user32.dll")] static extern int GetWindowLong(IntPtr hwnd, int index);
+	[DllImport("user32.dll")] static extern int SetWindowLong(IntPtr hwnd, int index, int value);
+	[DllImport("user32.dll")] static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint key, byte alpha, uint flags);
 	[DllImport("user32.dll")] static extern int GetWindowTextLength(IntPtr hwnd);
 	[DllImport("user32.dll")] static extern int GetClassName(IntPtr hwnd, StringBuilder name, int size);
 	[DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint pid);
@@ -86,6 +94,20 @@ public static class PetWindows {
 		return sb.Append("],\"fg\":").Append(Foreground(skipPid)).Append('}').ToString();
 	}
 
+	// Lets every click through `hwnd` (WS_EX_TRANSPARENT needs WS_EX_LAYERED to reach
+	// other apps; full opacity keeps it looking the same), or undoes that.
+	public static string ClickThrough(long hwnd, bool on) {
+		IntPtr h = new IntPtr(hwnd);
+		int ex = GetWindowLong(h, -20);
+		if (on) {
+			SetWindowLong(h, -20, ex | 0x20 | 0x80000);
+			SetLayeredWindowAttributes(h, 0, 255, 2);
+		} else {
+			SetWindowLong(h, -20, ex & ~0x20 & ~0x80000);
+		}
+		return "ok";
+	}
+
 	// The foreground window's executable, and whether it covers its whole monitor.
 	static string Foreground(uint skipPid) {
 		IntPtr hwnd = GetForegroundWindow();
@@ -112,7 +134,14 @@ public static class PetWindows {
 [PetWindows]::Init()
 } catch {}
 while ($null -ne ($line = [Console]::In.ReadLine())) {
-	try { $reply = [PetWindows]::List(__PID__) } catch { $reply = '{}' }
+	try {
+		if ($line.StartsWith("clickthrough ")) {
+			$p = $line.Split(" ")
+			$reply = [PetWindows]::ClickThrough([long]$p[1], $p[2] -eq "1")
+		} else {
+			$reply = [PetWindows]::List(__PID__)
+		}
+	} catch { $reply = '{}' }
 	[Console]::Out.WriteLine($reply)
 	[Console]::Out.Flush()
 }
@@ -152,6 +181,22 @@ func request_update() -> void:
 	if _thread == null or _pending:
 		return
 	_pending = true
+	_send("list")
+
+
+## Makes `window` ignore the mouse entirely (clicks reach whatever is under it), or
+## undoes that. Needs Win32, so it goes through the helper too.
+func set_click_through(window: Window, on: bool) -> void:
+	var hwnd := DisplayServer.window_get_native_handle(DisplayServer.WINDOW_HANDLE, window.get_window_id())
+	_send("clickthrough %d %d" % [hwnd, int(on)])
+
+
+func _send(command: String) -> void:
+	if _thread == null:
+		return
+	_mutex.lock()
+	_commands.append(command)
+	_mutex.unlock()
 	_semaphore.post()
 
 
@@ -195,12 +240,20 @@ func _worker() -> void:
 		_semaphore.wait()
 		if _quitting:
 			return
-		_stdio.store_line("list")
+		_mutex.lock()
+		var command: String = _commands[0] if not _commands.is_empty() else ""
+		if not _commands.is_empty():
+			_commands.remove_at(0)
+		_mutex.unlock()
+		if command.is_empty():
+			continue
+		_stdio.store_line(command)
 		_stdio.flush()
 		var line := _stdio.get_line()
 		if _stdio.eof_reached():
 			return # Helper died; keep the last snapshot.
-		_on_reply.call_deferred(line)
+		if command == "list":
+			_on_reply.call_deferred(line)
 
 
 func _on_reply(line: String) -> void:
@@ -217,6 +270,8 @@ func _on_reply(line: String) -> void:
 	var fg: Variant = data.get("fg")
 	if fg is Dictionary:
 		foreground = {"exe": String(fg.get("exe", "")), "fullscreen": bool(fg.get("full", false))}
+		if not foreground.exe.is_empty():
+			last_app = foreground.exe
 	elif fg != "self":
 		foreground = {}
 	updated.emit()

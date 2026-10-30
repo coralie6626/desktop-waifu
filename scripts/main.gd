@@ -2,11 +2,14 @@ extends Node
 ## Root controller. Turns the game window into a transparent, borderless, always-on-top
 ## overlay covering the monitor's usable area (everything except the taskbar), and keeps
 ## the window's clickable region glued to the pet so clicks elsewhere reach the desktop.
+## Always-on-top and click-through mode follow Settings (window/*).
 
 ## Extra clickable margin around the pet and bubble, in pixels.
 @export var hit_padding := 6.0
 
 var _last_rects: Array[Rect2] = []
+## Whether the window is currently set to let every click through.
+var _click_through := false
 
 @onready var pet: DesktopPet = $DesktopPet
 @onready var tray: TrayIcon = $TrayIcon
@@ -20,6 +23,8 @@ func _ready() -> void:
 	var area := _setup_overlay_window()
 	# Window coordinates: (0, 0) is the usable area's top-left; its bottom is the taskbar top.
 	pet.setup(Rect2(Vector2.ZERO, Vector2(area.size)))
+	Settings.changed.connect(_on_setting_changed)
+	_apply_window_settings()
 
 
 func _process(_delta: float) -> void:
@@ -31,7 +36,7 @@ func _process(_delta: float) -> void:
 func _setup_overlay_window() -> Rect2i:
 	var window := get_window()
 	window.borderless = true
-	window.always_on_top = true
+	window.always_on_top = Settings.get_value(&"window/always_on_top")
 	window.transparent = true
 	window.unresizable = true
 	get_viewport().transparent_bg = true
@@ -86,3 +91,17 @@ func _rect_to_polygon(rect: Rect2) -> PackedVector2Array:
 		rect.end,
 		Vector2(rect.position.x, rect.end.y),
 	])
+
+
+func _on_setting_changed(key: StringName) -> void:
+	if key in [&"window/always_on_top", &"window/click_through"]:
+		_apply_window_settings()
+
+
+func _apply_window_settings() -> void:
+	get_window().always_on_top = Settings.get_value(&"window/always_on_top")
+	var click_through: bool = Settings.get_value(&"window/click_through")
+	if click_through != _click_through:
+		_click_through = click_through
+		# Needs Win32 window styles, which the tracker's helper can set.
+		pet.window_tracker.set_click_through(get_window(), click_through)
