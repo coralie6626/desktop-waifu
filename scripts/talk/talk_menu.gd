@@ -82,4 +82,4 @@ func _on_action(action: String, value: Variant) -> void:
 		"finish_topic":
 			SnackTime.finish(value)
 		_:
-			push_warning("TalkMenu: unknown action '%s'" % action)
+			pass # Someone else's action (e.g. SleepSchedule's "go_to_sleep").

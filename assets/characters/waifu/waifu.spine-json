@@ -14,6 +14,7 @@
 	{ "name": "ear_r", "parent": "head", "x": 22, "y": 62, "rotation": -20 }
 ],
 "slots": [
+	{ "name": "pillow", "bone": "root" },
 	{ "name": "cushion", "bone": "root" },
 	{ "name": "snack", "bone": "root" },
 	{ "name": "tail", "bone": "tail", "attachment": "tail" },
@@ -28,9 +29,12 @@
 	{ "name": "blush", "bone": "head" },
 	{ "name": "mouth", "bone": "head", "attachment": "mouth_smile" },
 	{ "name": "eyes", "bone": "head", "attachment": "eyes" },
+	{ "name": "glasses", "bone": "head", "attachment": "glasses" },
+	{ "name": "hat", "bone": "head", "attachment": "hat" },
 	{ "name": "arm_l", "bone": "arm_l", "attachment": "arm" },
 	{ "name": "arm_r", "bone": "arm_r", "attachment": "arm" },
-	{ "name": "flower", "bone": "head", "attachment": "flower" }
+	{ "name": "flower", "bone": "head", "attachment": "flower" },
+	{ "name": "blanket", "bone": "root" }
 ],
 "skins": [
 	{
@@ -64,9 +68,85 @@
 			},
 			"flower": { "flower": { "x": -26, "y": 52, "width": 34, "height": 40 } }
 		}
+	},
+	{
+		"name": "outfit/pajamas",
+		"attachments": {
+			"torso": { "torso": { "path": "pj_top", "y": 23, "width": 44, "height": 46 } },
+			"skirt": { "skirt": { "path": "pj_shorts", "y": -2, "width": 60, "height": 30 } }
+		}
+	},
+	{
+		"name": "hat/nightcap",
+		"attachments": {
+			"hat": { "hat": { "path": "nightcap", "x": 4, "y": 86, "width": 64, "height": 56 } }
+		}
+	},
+	{
+		"name": "glasses/round",
+		"attachments": {
+			"glasses": { "glasses": { "path": "glasses_round", "y": 24, "width": 56, "height": 20 } }
+		}
+	},
+	{
+		"name": "bedding/default",
+		"attachments": {
+			"pillow": { "pillow": { "x": 10, "y": 10, "width": 84, "height": 30 } },
+			"blanket": { "blanket": { "x": -60, "y": 30, "width": 124, "height": 68 } }
+		}
 	}
 ],
 "animations": {
+	"drowsy": {
+		"slots": {
+			"eyes": { "attachment": [ { "name": "eyes_sleepy" }, { "time": 2.2, "name": "eyes_closed" } ] }
+		},
+		"bones": {
+			"head": { "rotate": [ { "value": 0 }, { "time": 0.3, "value": -6 }, { "time": 2.2, "value": -6 }, { "time": 2.6, "value": 0 } ] },
+			"ear_l": { "rotate": [ { "value": 0 }, { "time": 0.2, "value": -14 }, { "time": 0.4, "value": 0 } ] }
+		}
+	},
+	"lie": {
+		"slots": {
+			"pillow": { "attachment": [ { "name": "pillow" } ] },
+			"eyes": { "attachment": [ { "name": "eyes" }, { "time": 2.2, "name": "eyes_closed" }, { "time": 2.32, "name": "eyes" } ] }
+		},
+		"bones": {
+			"hip": {
+				"translate": [ { "x": -30, "y": -6 }, { "time": 3.2, "x": -30, "y": -6 } ],
+				"rotate": [ { "value": -90 }, { "time": 3.2, "value": -90 } ]
+			},
+			"head": { "rotate": [ { "value": 86 }, { "time": 1.6, "value": 80 }, { "time": 3.2, "value": 86 } ] },
+			"arm_l": { "rotate": [ { "value": 95 }, { "time": 3.2, "value": 95 } ] },
+			"arm_r": { "rotate": [ { "value": 115 }, { "time": 3.2, "value": 115 } ] },
+			"leg_l": { "rotate": [ { "value": -25 }, { "time": 0.8, "value": -60 }, { "time": 1.6, "value": -25 }, { "time": 2.4, "value": -60 }, { "time": 3.2, "value": -25 } ] },
+			"leg_r": { "rotate": [ { "value": -60 }, { "time": 0.8, "value": -25 }, { "time": 1.6, "value": -60 }, { "time": 2.4, "value": -25 }, { "time": 3.2, "value": -60 } ] },
+			"ear_l": { "rotate": [ { "value": 0 }, { "time": 1.1, "value": 0 }, { "time": 1.2, "value": -12 }, { "time": 1.32, "value": 0 }, { "time": 3.2, "value": 0 } ] },
+			"tail": { "rotate": [ { "value": 40 }, { "time": 1.6, "value": 60 }, { "time": 3.2, "value": 40 } ] }
+		}
+	},
+	"sleep": {
+		"slots": {
+			"pillow": { "attachment": [ { "name": "pillow" } ] },
+			"blanket": { "attachment": [ { "name": "blanket" } ] },
+			"eyes": { "attachment": [ { "name": "eyes_closed" } ] }
+		},
+		"bones": {
+			"hip": {
+				"translate": [ { "x": -38, "y": -6 }, { "time": 3, "x": -38, "y": -6 } ],
+				"rotate": [ { "value": -90 }, { "time": 3, "value": -90 } ]
+			},
+			"torso": { "scale": [ { "x": 1, "y": 1 }, { "time": 1.5, "x": 1.04, "y": 1 }, { "time": 3, "x": 1, "y": 1 } ] },
+			"head": { "rotate": [ { "value": 62 }, { "time": 1.5, "value": 59 }, { "time": 3, "value": 62 } ] },
+			"arm_l": { "rotate": [ { "value": 12 }, { "time": 3, "value": 12 } ] },
+			"arm_r": { "rotate": [ { "value": -6 }, { "time": 3, "value": -6 } ] },
+			"leg_l": { "rotate": [ { "value": -4 }, { "time": 3, "value": -4 } ] },
+			"leg_r": { "rotate": [ { "value": 10 }, { "time": 3, "value": 10 } ] },
+			"ear_l": { "rotate": [ { "value": 30 }, { "time": 3, "value": 30 } ] },
+			"ear_r": { "rotate": [ { "value": -20 }, { "time": 3, "value": -20 } ] },
+			"tail": { "rotate": [ { "value": 60 }, { "time": 3, "value": 60 } ] }
+		}
+	},
 	"snack": {
 		"slots": {
 			"cushion": { "attachment": [ { "name": "cushion" } ] },

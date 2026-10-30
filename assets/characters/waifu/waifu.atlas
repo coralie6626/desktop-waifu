@@ -1,5 +1,5 @@
 waifu.png
-size: 512,256
+size: 512,512
 filter: Linear,Linear
 pma: false
 hair_back
@@ -42,3 +42,15 @@ cushion
 bounds: 0,186,96,30
 snack
 bounds: 100,186,52,26
+pj_top
+bounds: 0,220,44,46
+pj_shorts
+bounds: 48,220,60,30
+nightcap
+bounds: 112,220,64,56
+glasses_round
+bounds: 180,220,56,20
+pillow
+bounds: 240,220,84,30
+blanket
+bounds: 0,280,124,68

@@ -19,7 +19,11 @@
 		{ "text": "You said you were tired... take it easy, okay?", "when": { "mood": "tired" } },
 		{ "text": "Deep breaths. You've got this.", "when": { "mood": "stressed" } },
 		{ "text": "Still smiling from your great day? Me too~", "anim": "happy", "when": { "mood": "great" } },
-		{ "text": "I'm right here if you want to talk.", "when": { "mood": "bad" } }
+		{ "text": "I'm right here if you want to talk.", "when": { "mood": "bad" } },
+		{ "text": "*yaaawn*... I'm getting sleepy.", "anim": "shy", "when": { "phase": "wind_down" } },
+		{ "text": "These pajamas are so comfy~", "anim": "happy", "when": { "phase": "wind_down" } },
+		{ "text": "Bedtime soon... don't stay up too late, okay?", "when": { "phase": "wind_down" } },
+		{ "text": "*yawn* ...I'm still awake. Probably.", "when": { "phase": "night" } }
 	],
 	"grab": ["Hey!", "Wheee~", "Put me down!", { "text": "Where are we going?", "when": { "level_min": 2 } }],
 	"sit": ["Comfy~", "Nice spot.", "I'll rest here a bit."],
@@ -65,5 +69,12 @@
 	"timer_done": ["Time's up! ({text})", "Ding~ your {text} is done!"],
 	"alarm_due": ["It's {time}! Time to get going~", "Alarm! It's {time}!"],
 	"upcoming_none": ["Nothing coming up. Want me to set a timer?"],
-	"reminders_cleared": ["Okay, all cleared!"]
+	"reminders_cleared": ["Okay, all cleared!"],
+
+	"bedtime_ask": ["It's getting really late... can I go to sleep?", "*yawn* ...Is it okay if I sleep now?"],
+	"bedtime_yes": { "anim": "happy", "lines": ["Good night~ Don't stay up too long!", "Sweet dreams... see you in the morning."] },
+	"bedtime_stay": { "anim": "pout", "lines": ["Okay... just a little longer.", "Mmh, fine. But I'm asking again soon!"] },
+	"sleep_disturbed": { "anim": "drowsy", "lines": ["Mmh...? Five more minutes...", "*mumble* ...it's late, you should sleep too...", "Zzz... huh? ...zzz."] },
+	"wake_up": { "anim": "happy", "lines": ["Good morning! *stretch*", "Mmmh, morning already? Good morning~"] },
+	"woken_up": { "anim": "surprised", "lines": ["Wha-! I'm up, I'm up!", "Hey, I was sleeping..."] }
 }

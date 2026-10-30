@@ -35,9 +35,11 @@ func _process(_delta: float) -> void:
 		PetStateMachine.IDLE, PetStateMachine.WANDER, PetStateMachine.SITTING:
 			_active = true
 			_pet.state_machine.transition_to(PetStateMachine.ANNOUNCE)
-		PetStateMachine.PERCHED:
+		PetStateMachine.SLEEPING:
+			_pet.state_machine.transition_to(PetStateMachine.IDLE) # An alarm wakes her up.
+		PetStateMachine.PERCHED, PetStateMachine.WATCHING:
 			_active = true
-			show_next() # Announce from the title bar.
+			show_next() # Announce from where she is.
 		_:
 			pass # Being carried or falling: wait until she lands.
 

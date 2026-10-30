@@ -27,6 +27,9 @@ const REACTION_TRACK := 1
 @export_group("Animation")
 ## Size of the clickable box, measured up from the feet (unscaled skeleton units).
 @export var hit_size := Vector2(92, 176)
+## The clickable box while she lies on the taskbar (sleeping, watching), with room above
+## her head for the z's.
+@export var lying_hit_size := Vector2(240, 150)
 ## Animations that play once and emit animation_finished; everything else loops.
 @export var one_shot_anims: Array[StringName] = [&"idle_action"]
 ## Seconds a reaction takes to fade in and out.
@@ -39,6 +42,9 @@ var bounds := Rect2()
 var floor_y: float:
 	get:
 		return bounds.end.y
+
+## Set by states where she lies down, so the hit box fits the pose.
+var lying := false
 
 var _anim_names: Dictionary[StringName, bool] = {}
 
@@ -53,6 +59,10 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var talk_menu: TalkMenu = $TalkMenu
 @onready var choice_menu: ChoiceMenu = $ChoiceMenu
 @onready var announcer: PetAnnouncer = $Announcer
+@onready var wardrobe: Wardrobe = $Wardrobe
+@onready var sleep_schedule: SleepSchedule = $SleepSchedule
+@onready var game_watcher: GameWatcher = $GameWatcher
+@onready var zzz: ZzzEffect = $Zzz
 
 
 func _ready() -> void:
@@ -203,7 +213,7 @@ func face(direction: float) -> void:
 
 ## Screen-space box standing on the skeleton's root (the feet), see hit_size.
 func get_hit_rect() -> Rect2:
-	var size := hit_size * sprite.global_scale.abs()
+	var size := (lying_hit_size if lying else hit_size) * sprite.global_scale.abs()
 	return Rect2(sprite.global_position - Vector2(size.x * 0.5, size.y), size)
 
 
