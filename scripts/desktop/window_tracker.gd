@@ -5,8 +5,8 @@ extends Node
 ## Win32 isn't reachable from GDScript, so a small PowerShell helper does the
 ## EnumWindows call. It's started once, lives for the whole session and answers a
 ## "list" request on stdin with one JSON line (it also sets click-through on our own
-## window, see set_click_through). Requests run on a worker thread so the
-## pet never stalls while PowerShell starts up or answers.
+## window and taps media keys: see set_click_through and press_key). Requests run on a
+## worker thread so the pet never stalls while PowerShell starts up or answers.
 
 ## Emitted on the main thread whenever `windows` has been refreshed.
 signal updated
@@ -25,7 +25,8 @@ var _stdio: FileAccess
 var _thread: Thread
 var _semaphore := Semaphore.new()
 var _mutex := Mutex.new()
-## Lines waiting to be sent to the helper ("list", "clickthrough <hwnd> <0|1>").
+## Lines waiting to be sent to the helper ("list", "clickthrough <hwnd> <0|1>",
+## "key <vk>").
 var _commands := PackedStringArray()
 var _pending := false
 var _quitting := false
@@ -50,6 +51,7 @@ public static class PetWindows {
 	[DllImport("user32.dll")] static extern int GetWindowLong(IntPtr hwnd, int index);
 	[DllImport("user32.dll")] static extern int SetWindowLong(IntPtr hwnd, int index, int value);
 	[DllImport("user32.dll")] static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint key, byte alpha, uint flags);
+	[DllImport("user32.dll")] static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
 	[DllImport("user32.dll")] static extern int GetWindowTextLength(IntPtr hwnd);
 	[DllImport("user32.dll")] static extern int GetClassName(IntPtr hwnd, StringBuilder name, int size);
 	[DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint pid);
@@ -92,6 +94,13 @@ public static class PetWindows {
 			return true;
 		}, IntPtr.Zero);
 		return sb.Append("],\"fg\":").Append(Foreground(skipPid)).Append('}').ToString();
+	}
+
+	// Taps a key, e.g. a media key (extended key, down then up).
+	public static string Key(int vk) {
+		keybd_event((byte)vk, 0, 1, UIntPtr.Zero);
+		keybd_event((byte)vk, 0, 3, UIntPtr.Zero);
+		return "ok";
 	}
 
 	// Lets every click through `hwnd` (WS_EX_TRANSPARENT needs WS_EX_LAYERED to reach
@@ -138,6 +147,8 @@ while ($null -ne ($line = [Console]::In.ReadLine())) {
 		if ($line.StartsWith("clickthrough ")) {
 			$p = $line.Split(" ")
 			$reply = [PetWindows]::ClickThrough([long]$p[1], $p[2] -eq "1")
+		} elseif ($line.StartsWith("key ")) {
+			$reply = [PetWindows]::Key([int]$line.Substring(4))
 		} else {
 			$reply = [PetWindows]::List(__PID__)
 		}
@@ -191,6 +202,11 @@ func set_click_through(window: Window, on: bool) -> void:
 	_send("clickthrough %d %d" % [hwnd, int(on)])
 
 
+## Taps a media key (or any virtual key code) as if pressed on the keyboard.
+func press_key(vk: int) -> void:
+	_send("key %d" % vk)
+
+
 func _send(command: String) -> void:
 	if _thread == null:
 		return
@@ -226,6 +242,30 @@ func find_landing(feet: Vector2, reach: float, top_range: Vector2, margin: float
 		if best.is_empty() or top < best.rect.position.y:
 			best = windows[i]
 	return best
+
+
+## Whether the title bar of window `id` is still uncovered at `x` (another window may
+## have been brought in front of it). False if the window is gone.
+func is_spot_free(id: int, x: float) -> bool:
+	for i in windows.size():
+		if windows[i].id == id:
+			return not _is_covered(Vector2(x, windows[i].rect.position.y + 1.0), i)
+	return false
+
+
+## A title bar to hop onto from `feet`: the frontmost window whose top is within
+## `top_range` and that has an uncovered spot `margin` px from its ends, as
+## {"id", "rect", "x"} with the spot nearest to the feet. {} if there's none.
+func find_hop_target(feet: Vector2, top_range: Vector2, margin: float) -> Dictionary:
+	for i in windows.size():
+		var rect: Rect2 = windows[i].rect
+		var top := rect.position.y
+		if top < top_range.x or top > top_range.y or rect.size.x < margin * 2.0:
+			continue
+		var x := clampf(feet.x, rect.position.x + margin, rect.end.x - margin)
+		if not _is_covered(Vector2(x, top + 1.0), i):
+			return {"id": windows[i].id, "rect": rect, "x": x}
+	return {}
 
 
 func _is_covered(point: Vector2, index: int) -> bool:

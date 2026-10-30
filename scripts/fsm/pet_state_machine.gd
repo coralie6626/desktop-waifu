@@ -13,6 +13,7 @@ const PERCHED := &"Perched"
 const ANNOUNCE := &"Announce"
 const SLEEPING := &"Sleeping"
 const WATCHING := &"Watching"
+const HOP := &"Hop"
 
 @export var initial_state: PetState
 

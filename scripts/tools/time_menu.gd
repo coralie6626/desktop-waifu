@@ -3,7 +3,7 @@ extends PopupMenu
 ## "Keep time for me": timers, alarms and reminders. Used as a submenu of the Talk menu
 ## and of the tray menu; each has its own instance, and both act through Reminders/Desk.
 
-enum Id { TIMER_5, TIMER_15, FOCUS_25, CUSTOM_TIMER, ALARM, REMINDER, UPCOMING, CLEAR }
+enum Id { TIMER_5, TIMER_15, FOCUS_25, CUSTOM_TIMER, ALARM, REMINDER, ALL, UPCOMING, CLEAR }
 
 ## Set by the owner: who answers "What's coming up?".
 var pet: DesktopPet
@@ -18,6 +18,7 @@ func _ready() -> void:
 	add_separator()
 	add_item("Alarm...", Id.ALARM)
 	add_item("Remind me...", Id.REMINDER)
+	add_item("All reminders...", Id.ALL)
 	add_separator()
 	add_item("What's coming up?", Id.UPCOMING)
 	add_item("Cancel all timers and reminders", Id.CLEAR)
@@ -39,6 +40,8 @@ func _on_id_pressed(id: int) -> void:
 			Desk.ask_alarm()
 		Id.REMINDER:
 			Desk.ask_reminder()
+		Id.ALL:
+			Desk.open_reminders()
 		Id.UPCOMING:
 			if pet:
 				pet.announcer.say_upcoming()

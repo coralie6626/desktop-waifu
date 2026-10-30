@@ -7,7 +7,8 @@ extends StatusIndicator
 ## buttons arrive through the pressed signal and left-click stays free for the toggle.
 
 enum MenuId {
-	TOGGLE, NOTES, WARDROBE, SCHEDULE, GAMES, ALWAYS_ON_TOP, CLICK_THROUGH, HIDE_30, HIDE_UNTIL_RESTART, QUIT,
+	TOGGLE, NOTES, WARDROBE, SCHEDULE, GAMES, ALWAYS_ON_TOP, CLICK_THROUGH, WATCH_DOWNLOADS,
+	HIDE_30, HIDE_UNTIL_RESTART, QUIT,
 }
 
 ## Volume steps offered in the Volume submenus, in percent.
@@ -47,6 +48,7 @@ func _ready() -> void:
 	_settings_menu.add_item("Game whitelist...", MenuId.GAMES)
 	_settings_menu.add_check_item("Always on top", MenuId.ALWAYS_ON_TOP)
 	_settings_menu.add_check_item("Click-through mode", MenuId.CLICK_THROUGH)
+	_settings_menu.add_check_item("Watch my Downloads folder", MenuId.WATCH_DOWNLOADS)
 	for bus in [&"voice", &"sfx"]:
 		var menu := PopupMenu.new()
 		menu.theme = _menu.theme
@@ -87,6 +89,7 @@ func _refresh_menu() -> void:
 	_time_menu.pet = pet
 	_set_checked(_settings_menu, MenuId.ALWAYS_ON_TOP, Settings.get_value(&"window/always_on_top"))
 	_set_checked(_settings_menu, MenuId.CLICK_THROUGH, Settings.get_value(&"window/click_through"))
+	_set_checked(_settings_menu, MenuId.WATCH_DOWNLOADS, not String(Settings.get_value(&"tools/watch_folder")).is_empty())
 	for bus in _volume_menus:
 		var volume: float = Settings.get_value(StringName("audio/%s_volume" % bus))
 		var menu := _volume_menus[bus]
@@ -110,6 +113,9 @@ func _on_menu_id_pressed(id: int) -> void:
 			Settings.set_value(&"window/always_on_top", not Settings.get_value(&"window/always_on_top"))
 		MenuId.CLICK_THROUGH:
 			Settings.set_value(&"window/click_through", not Settings.get_value(&"window/click_through"))
+		MenuId.WATCH_DOWNLOADS:
+			var watching := not String(Settings.get_value(&"tools/watch_folder")).is_empty()
+			Settings.set_value(&"tools/watch_folder", "" if watching else OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS))
 		MenuId.HIDE_30:
 			hide_pet(HIDE_TIME)
 		MenuId.HIDE_UNTIL_RESTART:

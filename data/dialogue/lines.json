@@ -93,5 +93,13 @@
 	"lunch": ["It's lunchtime! Go eat something good~", "Lunch break! Don't skip it!"],
 	"dozed_off": ["Zzz... *mumble*... not sleepy...", "*nods off*"],
 	"tucked_in": { "anim": "drowsy", "lines": ["Mmh... warm... thank you...", "*snuggles* ...g'night..."] },
-	"new_item": { "anim": "happy", "lines": ["Ooh! I unlocked something new for the wardrobe: {item}!", "Look! {item} is in my wardrobe now~"] }
+	"new_item": { "anim": "happy", "lines": ["Ooh! I unlocked something new for the wardrobe: {item}!", "Look! {item} is in my wardrobe now~"] },
+
+	"countdown": ["Don't forget: {text}, {left}", "{text}: {left}"],
+	"download_done": { "anim": "happy", "lines": ["Your download finished! ({file})", "Ding~ {file} is here!"] },
+	"downloads_done": { "anim": "happy", "lines": ["{count} new files just arrived!", "Your downloads are done: {count} files!"] },
+	"music_toggle": ["♪ Music time~", "Okay, pausing... or playing? Hehe."],
+	"music_next": ["Next song!", "Ooh, I like this one~"],
+	"perch_covered": { "anim": "pout", "lines": ["Hey! I can't see anything!", "Mmph! It's dark in here!"] },
+	"hop": ["Hup!", "I'll sit up there for a bit~"]
 }

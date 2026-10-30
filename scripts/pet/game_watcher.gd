@@ -10,7 +10,7 @@ extends Node
 const CAN_WATCH_FROM: Array[StringName] = [PetStateMachine.IDLE, PetStateMachine.WANDER, PetStateMachine.SITTING]
 
 ## Seconds between foreground checks.
-@export var poll_interval := 2.0
+@export var poll_interval := 1.0
 
 var game_in_front := false
 

@@ -2,10 +2,14 @@ class_name TalkMenu
 extends PopupMenu
 ## The Talk menu, opened by double-clicking her (or from her right-click menu). Its own
 ## OS window like the context menu, so it isn't clipped by the click region.
-## Snack Time and the mood check-in run as Conversations; the scratchpad and "Keep time
-## for me" open the Desk tools.
+## Snack Time, the mood check-in and feelings run as Conversations; the scratchpad and
+## "Keep time for me" open the Desk tools; Music taps the media keys.
 
 enum Id { SNACK, MOOD, FEELINGS, CHAT, MEMORIES, NOTES }
+enum MusicId { PLAY_PAUSE, NEXT, PREVIOUS }
+
+## Windows virtual key codes for the media keys.
+const MEDIA_KEYS := {MusicId.PLAY_PAUSE: 0xB3, MusicId.NEXT: 0xB0, MusicId.PREVIOUS: 0xB1}
 
 const MOOD_CHECKIN_PATH := "res://data/talk/mood_checkin.json"
 const FEELINGS_PATH := "res://data/talk/feelings.json"
@@ -27,6 +31,14 @@ func _ready() -> void:
 	time_menu.pet = _pet
 	add_child(time_menu)
 	add_submenu_node_item("Keep time for me", time_menu)
+	var music_menu := PopupMenu.new()
+	music_menu.theme = theme
+	music_menu.add_item("Play / pause", MusicId.PLAY_PAUSE)
+	music_menu.add_item("Next song", MusicId.NEXT)
+	music_menu.add_item("Previous song", MusicId.PREVIOUS)
+	music_menu.id_pressed.connect(press_media_key)
+	add_child(music_menu)
+	add_submenu_node_item("Music", music_menu)
 	id_pressed.connect(_on_id_pressed)
 	_conversation.action.connect(_on_action)
 
@@ -55,6 +67,13 @@ func _on_id_pressed(id: int) -> void:
 			Desk.open_notes()
 		Id.CHAT:
 			_pet.say_line(&"idle")
+
+
+## Works with Spotify, browsers and most players: it's the keyboard's media key.
+func press_media_key(id: int) -> void:
+	_pet.window_tracker.press_key(MEDIA_KEYS[id])
+	_pet.say_line(&"music_next" if id != MusicId.PLAY_PAUSE else &"music_toggle")
+	_pet.play_reaction(&"dance")
 
 
 func start_snack_time() -> void:
