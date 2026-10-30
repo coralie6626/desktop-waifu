@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Settings="*res://scripts/data/settings.gd"
+SaveData="*res://scripts/data/save_data.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]

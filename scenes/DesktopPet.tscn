@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/fsm/states/sitting_state.gd" id="8_sitting"]
 [ext_resource type="Script" path="res://scripts/fsm/states/perched_state.gd" id="9_perched"]
 [ext_resource type="Script" path="res://scripts/desktop/window_tracker.gd" id="10_tracker"]
+[ext_resource type="Script" path="res://scripts/pet/pet_gestures.gd" id="11_gestures"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -75,3 +76,6 @@ script = ExtResource("9_perched")
 
 [node name="WindowTracker" type="Node" parent="."]
 script = ExtResource("10_tracker")
+
+[node name="Gestures" type="Node" parent="."]
+script = ExtResource("11_gestures")

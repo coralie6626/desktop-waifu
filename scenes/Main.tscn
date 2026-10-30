@@ -2,8 +2,14 @@
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/DesktopPet.tscn" id="2_pet"]
+[ext_resource type="Script" path="res://scripts/desktop/tray_icon.gd" id="3_tray"]
+[ext_resource type="Texture2D" path="res://icon.svg" id="4_icon"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
 
 [node name="DesktopPet" parent="." instance=ExtResource("2_pet")]
+
+[node name="TrayIcon" type="StatusIndicator" parent="."]
+icon = ExtResource("4_icon")
+script = ExtResource("3_tray")

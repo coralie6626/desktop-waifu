@@ -36,7 +36,7 @@ signal animation_finished(anim: StringName)
 ## Animations that play once and emit animation_finished; everything else loops.
 @export var one_shot_anims: Array[StringName] = [&"idle_action"]
 
-enum MenuId { TALK, SIT, QUIT }
+enum MenuId { TALK, SIT, HIDE, QUIT }
 
 ## Area the pet lives in, in window coordinates. Its bottom edge is the taskbar's top edge.
 var bounds := Rect2()
@@ -51,12 +51,16 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var context_menu: PopupMenu = $ContextMenu
 @onready var state_machine: PetStateMachine = $StateMachine
 @onready var window_tracker: WindowTracker = $WindowTracker
+@onready var gestures: PetGestures = $Gestures
 
 
 func _ready() -> void:
 	for anim: SpineAnimation in sprite.skeleton_data_res.get_animations():
 		_anim_names[StringName(anim.get_name())] = true
 	sprite.animation_completed.connect(_on_sprite_animation_completed)
+	gestures.drag_started.connect(_on_drag_started)
+	gestures.clicked.connect(_on_clicked)
+	gestures.double_clicked.connect(_on_double_clicked)
 	_build_context_menu()
 	# Lets you run DesktopPet.tscn on its own (F6) for quick testing.
 	if get_parent() == get_tree().root:
@@ -87,6 +91,34 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 	state_machine.handle_input(event)
+
+
+## Hides her (e.g. from the tray) or brings her back. While hidden she isn't drawn,
+## can't be clicked and is paused, so she picks up where she left off.
+func set_shown(shown: bool) -> void:
+	if shown == visible:
+		return
+	if not shown:
+		gestures.cancel()
+		bubble.hide()
+		context_menu.hide()
+	visible = shown
+	process_mode = Node.PROCESS_MODE_INHERIT if shown else Node.PROCESS_MODE_DISABLED
+
+
+# --- Gestures (see PetGestures) -------------------------------------------------------
+
+func _on_drag_started(press_position: Vector2) -> void:
+	state_machine.transition_to(PetStateMachine.DRAGGED, {"grab_offset": global_position - press_position})
+
+
+func _on_clicked(_position: Vector2) -> void:
+	say_random_line()
+
+
+## Stand-in until the Talk menu exists (F-1.3).
+func _on_double_clicked(_position: Vector2) -> void:
+	_open_context_menu()
 
 
 # --- Dialogue -------------------------------------------------------------------
@@ -140,8 +172,12 @@ func get_hit_rect() -> Rect2:
 
 
 ## Everything that must stay clickable AND visible (see Main._update_passthrough).
+## Empty while she's hidden.
 func get_interactive_rects() -> Array[Rect2]:
-	var rects: Array[Rect2] = [get_hit_rect()]
+	var rects: Array[Rect2] = []
+	if not visible:
+		return rects
+	rects.append(get_hit_rect())
 	if bubble.visible:
 		rects.append(bubble.get_global_rect())
 	return rects
@@ -179,6 +215,9 @@ func _build_context_menu() -> void:
 	context_menu.add_item("Say something", MenuId.TALK)
 	context_menu.add_item("Sit down", MenuId.SIT)
 	context_menu.add_separator()
+	# Only where there's a tray icon to bring her back with.
+	if DisplayServer.has_feature(DisplayServer.FEATURE_STATUS_INDICATOR):
+		context_menu.add_item("Hide", MenuId.HIDE)
 	context_menu.add_item("Quit", MenuId.QUIT)
 	context_menu.id_pressed.connect(_on_context_menu_id_pressed)
 
@@ -195,5 +234,7 @@ func _on_context_menu_id_pressed(id: int) -> void:
 			say_random_line()
 		MenuId.SIT:
 			state_machine.transition_to(PetStateMachine.SITTING)
+		MenuId.HIDE:
+			set_shown(false)
 		MenuId.QUIT:
 			get_tree().quit()

@@ -25,11 +25,10 @@ func update(_delta: float) -> void:
 
 
 ## Receives mouse/keyboard events forwarded by the pet.
-## Default behaviour for every non-drag state: left-click on the pet picks it up.
+## Default behaviour for every non-drag state: hand them to the pet's gesture detector,
+## which reports clicks, double-clicks and pickups (see DesktopPet._on_drag_started).
 func handle_input(event: InputEvent) -> void:
-	var mb := event as InputEventMouseButton
-	if mb and mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed and pet.contains_point(mb.position):
-		machine.transition_to(PetStateMachine.DRAGGED, {"grab_offset": pet.global_position - mb.position})
+	if pet.gestures.handle_input(event):
 		get_viewport().set_input_as_handled()
 
 
