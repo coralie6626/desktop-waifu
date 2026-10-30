@@ -20,6 +20,10 @@ out or swapped for local equivalents.
 | Tray icon: left-click shows or hides her, right-click opens a menu (F-0.2) | ✅ | `TrayIcon` |
 | Click, double-click and drag told apart (F-0.3) | ✅ | `PetGestures` |
 | Spine skeleton with idle, wave, walk, drag, fall, sit | ✅ | `assets/characters/waifu/` |
+| Body-part hit regions that follow the bones (F-0.4) | ✅ | `BodyParts` |
+| Expressions: eye and mouth variants, blush; `pat`, `happy`, `shy`, `surprised`, `pout` (F-0.6) | ✅ | `tools/build_atlas.ps1`, reaction track in `DesktopPet` |
+| Headpats, per-part click reactions, annoyance (F-1.1, F-1.2) | ✅ | `PetGestures`, `PetReactions` |
+| Affection with levels, daily gain cap and neglect (F-2.5) | ✅ | `Affection` autoload |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -50,13 +54,16 @@ Most later features depend on these, so they come first.
   double-click time count as a double-click.
 - F-1.1, F-1.2 and F-1.3 all depend on this.
 
-### F-0.4 Body-part hit regions (M)
+### F-0.4 Body-part hit regions (M) ✅
 - Add Spine **bounding-box attachments** for head, face, chest, hands and skirt in
   `waifu.spine-json`. They follow the bones, so they still hit correctly mid-animation.
 - New `DesktopPet.get_body_part(point) -> StringName` that tests the point against those
   boxes, falling back to `&"body"`.
 - Fallback if the bounding boxes are hard to query from GDScript: compute rectangles
   from bone world positions (`SpineSprite.get_skeleton().find_bone()`).
+- Done with the fallback: spine-godot doesn't expose bounding-box vertices, so the
+  boxes are defined per bone in `BodyParts.REGIONS` and placed with
+  `SpineSprite.get_global_bone_transform()`.
 
 ### F-0.5 Dialogue data (S)
 - Move lines out of `@export` arrays into data files, e.g. `res://data/dialogue/*.json`,
@@ -64,12 +71,15 @@ Most later features depend on these, so they come first.
 - Support conditions (time of day, affection level, mood, outfit) and an optional
   expression or animation for each line.
 
-### F-0.6 Expressions (M)
+### F-0.6 Expressions (M) ✅
 - Add face attachments to the skeleton: eyes (open, closed, happy ^^, surprised,
   sleepy) and mouth (smile, open, pout).
 - Add short one-shot animations: `pat`, `shy`, `happy`, `surprised`, `pout`.
 - Needs new art drawn into the atlas. The generator script, `draw_atlas.ps1`, isn't in
   the repo yet; move it to `tools/` first.
+- Done: the original generator wasn't available, so the current sheet is kept as
+  `tools/art/waifu_base.png` and `tools/build_atlas.ps1` draws the new parts onto it
+  and rewrites the atlas. Expressions play on Spine track 1, over the body animation.
 
 ### F-0.7 Audio (S)
 - Add `Voice` and `SFX` audio buses with volume controlled from Settings.
@@ -79,7 +89,7 @@ Most later features depend on these, so they come first.
 
 ## Phase 1: Interaction and touch
 
-### F-1.1 Headpats (M)
+### F-1.1 Headpats (M) ✅
 - Press on the head and rub side to side to give continuous pats. Track horizontal
   direction changes while the button is held on the `head` region.
 - Patting plays the `pat` loop with happy eyes, shows affection lines, and raises
@@ -87,7 +97,7 @@ Most later features depend on these, so they come first.
 - A press on the head that moves mostly vertically, or holds still, still picks her up
   as before.
 
-### F-1.2 Reactions per body part (S, after F-0.4 and F-0.6)
+### F-1.2 Reactions per body part (S, after F-0.4 and F-0.6) ✅
 - A single click on face, chest, hands or skirt gives its own line and expression.
 - Skirt and chest clicks get a flustered or pouty reaction. Poking her face too often
   makes her annoyed for a while.
@@ -127,7 +137,7 @@ or from the tray.
 - A list of unlocked Snack Time topics, milestone lines (first headpat, first perch,
   affection levels) and story events, each replayable.
 
-### F-2.5 Affection (S)
+### F-2.5 Affection (S) ✅
 - One number in save data, raised by pats, talking and daily check-ins, and lowered
   slightly by neglect or too much poking.
 - Thresholds unlock lines, topics and outfits.

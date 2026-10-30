@@ -7,6 +7,10 @@ extends Node2D
 ## Emitted when a one-shot animation (see one_shot_anims) reaches its end.
 signal animation_finished(anim: StringName)
 
+## Spine track for reactions (expressions like "happy" or "pat"). They layer over the
+## body animation on track 0, so she can smile while she walks or sits.
+const REACTION_TRACK := 1
+
 @export_group("Movement")
 @export var walk_speed := 90.0
 ## Dropping the pet within this many pixels above the taskbar makes it SIT.
@@ -35,6 +39,8 @@ signal animation_finished(anim: StringName)
 @export var hit_size := Vector2(92, 176)
 ## Animations that play once and emit animation_finished; everything else loops.
 @export var one_shot_anims: Array[StringName] = [&"idle_action"]
+## Seconds a reaction takes to fade in and out.
+@export var reaction_mix := 0.15
 
 enum MenuId { TALK, SIT, HIDE, QUIT }
 
@@ -52,6 +58,7 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var state_machine: PetStateMachine = $StateMachine
 @onready var window_tracker: WindowTracker = $WindowTracker
 @onready var gestures: PetGestures = $Gestures
+@onready var reactions: PetReactions = $Reactions
 
 
 func _ready() -> void:
@@ -59,7 +66,6 @@ func _ready() -> void:
 		_anim_names[StringName(anim.get_name())] = true
 	sprite.animation_completed.connect(_on_sprite_animation_completed)
 	gestures.drag_started.connect(_on_drag_started)
-	gestures.clicked.connect(_on_clicked)
 	gestures.double_clicked.connect(_on_double_clicked)
 	_build_context_menu()
 	# Lets you run DesktopPet.tscn on its own (F6) for quick testing.
@@ -100,20 +106,17 @@ func set_shown(shown: bool) -> void:
 		return
 	if not shown:
 		gestures.cancel()
+		stop_reaction()
 		bubble.hide()
 		context_menu.hide()
 	visible = shown
 	process_mode = Node.PROCESS_MODE_INHERIT if shown else Node.PROCESS_MODE_DISABLED
 
 
-# --- Gestures (see PetGestures) -------------------------------------------------------
+# --- Gestures (see PetGestures; clicks and pats go to PetReactions) ------------------
 
 func _on_drag_started(press_position: Vector2) -> void:
 	state_machine.transition_to(PetStateMachine.DRAGGED, {"grab_offset": global_position - press_position})
-
-
-func _on_clicked(_position: Vector2) -> void:
-	say_random_line()
 
 
 ## Stand-in until the Talk menu exists (F-1.3).
@@ -150,9 +153,31 @@ func play_anim(anim: StringName, fallback: StringName = &"idle") -> void:
 	sprite.get_animation_state().set_animation(anim, not one_shot_anims.has(anim), 0)
 
 
+## Plays a reaction over the current body animation (see REACTION_TRACK). One-shot
+## reactions fade out by themselves; looping ones (like "pat") run until stop_reaction().
+func play_reaction(anim: StringName, loop := false) -> void:
+	if not has_anim(anim):
+		return
+	var state := sprite.get_animation_state()
+	var current := state.get_current(REACTION_TRACK)
+	if current == null or current.get_animation().get_name() == "<empty>":
+		# Start from an empty animation so the reaction fades in instead of popping.
+		state.set_empty_animation(REACTION_TRACK, 0.0)
+		state.add_animation(anim, 0.0, loop, REACTION_TRACK).set_mix_duration(reaction_mix)
+	else:
+		state.set_animation(anim, loop, REACTION_TRACK)
+
+
+func stop_reaction() -> void:
+	sprite.get_animation_state().set_empty_animation(REACTION_TRACK, reaction_mix)
+
+
 func _on_sprite_animation_completed(_sprite: SpineSprite, _state: SpineAnimationState, entry: SpineTrackEntry) -> void:
 	var anim := StringName(entry.get_animation().get_name())
-	if one_shot_anims.has(anim):
+	if entry.get_track_index() == REACTION_TRACK:
+		if not entry.get_loop() and anim != &"<empty>":
+			stop_reaction()
+	elif one_shot_anims.has(anim):
 		animation_finished.emit(anim)
 
 
@@ -185,6 +210,11 @@ func get_interactive_rects() -> Array[Rect2]:
 
 func contains_point(point: Vector2) -> bool:
 	return get_hit_rect().has_point(point)
+
+
+## &"head", &"face", &"chest", &"hands", &"skirt" or &"body" (see BodyParts).
+func get_body_part(point: Vector2) -> StringName:
+	return BodyParts.find(sprite, point)
 
 
 func is_near_floor() -> bool:

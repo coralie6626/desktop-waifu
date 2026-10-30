@@ -17,6 +17,8 @@ func enter(_msg: Dictionary = {}) -> void:
 
 
 func update(delta: float) -> void:
+	if pet.gestures.is_patting():
+		return # Hold still while being patted.
 	_wait -= delta
 	if _wait > 0.0:
 		return
