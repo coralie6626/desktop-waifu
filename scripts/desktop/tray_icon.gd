@@ -6,18 +6,23 @@ extends StatusIndicator
 ## The menu is opened by hand rather than through StatusIndicator.menu, so that both
 ## buttons arrive through the pressed signal and left-click stays free for the toggle.
 
-enum MenuId { TOGGLE, QUIT }
+enum MenuId { TOGGLE, NOTES, QUIT }
 
 ## Set by Main.
 var pet: DesktopPet
 
 var _menu := PopupMenu.new()
+var _time_menu := TimeMenu.new()
 
 
 func _ready() -> void:
 	tooltip = ProjectSettings.get_setting("application/config/name")
 	_menu.theme = preload("res://ui/menu_theme.tres")
 	_menu.add_item("Hide", MenuId.TOGGLE)
+	_menu.add_separator()
+	_menu.add_item("Notes...", MenuId.NOTES)
+	_menu.add_child(_time_menu)
+	_menu.add_submenu_node_item("Keep time for me", _time_menu)
 	_menu.add_separator()
 	_menu.add_item("Quit", MenuId.QUIT)
 	_menu.id_pressed.connect(_on_menu_id_pressed)
@@ -31,6 +36,7 @@ func _on_pressed(mouse_button: int, mouse_position: Vector2i) -> void:
 			_toggle_pet()
 		MOUSE_BUTTON_RIGHT:
 			_menu.set_item_text(_menu.get_item_index(MenuId.TOGGLE), "Hide" if pet.visible else "Show")
+			_time_menu.pet = pet
 			# Screen coordinates; the popup shifts itself up to stay above the taskbar.
 			_menu.popup(Rect2i(mouse_position, Vector2i.ZERO))
 
@@ -39,6 +45,8 @@ func _on_menu_id_pressed(id: int) -> void:
 	match id:
 		MenuId.TOGGLE:
 			_toggle_pet()
+		MenuId.NOTES:
+			Desk.open_notes()
 		MenuId.QUIT:
 			get_tree().quit()
 

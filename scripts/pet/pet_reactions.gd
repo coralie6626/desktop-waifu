@@ -41,6 +41,9 @@ func is_annoyed() -> bool:
 
 
 func _on_clicked(position: Vector2) -> void:
+	if _pet.announcer.is_active():
+		_pet.bubble.hide_message() # Clicking her dismisses a reminder too.
+		return
 	if is_annoyed():
 		_pet.say_line(&"annoyed")
 		return

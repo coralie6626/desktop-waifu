@@ -27,6 +27,8 @@ out or swapped for local equivalents.
 | Dialogue lines in data files with conditions (F-0.5) | ✅ | `data/dialogue/lines.json`, `Dialogue` autoload |
 | Talk menu on double-click, scripted conversations with choices (F-1.3) | ✅ | `TalkMenu`, `Conversation`, `ChoiceMenu` |
 | Snack Time with daily topics, mood check-in (F-2.1, F-2.2) | ✅ | `SnackTime`, `Mood`, `data/talk/` |
+| Scratchpad window saved to `user://notes.txt` (F-3.1) | ✅ | `NotesWindow`, `Desk` autoload |
+| Reminders from plain text; timers and alarms; she walks out and announces them (F-3.2, F-3.4) | ✅ | `ReminderParser`, `Reminders` autoload, `PetAnnouncer`, `Announce` state |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -149,10 +151,10 @@ or from the tray.
 
 ## Phase 3: Productivity tools ("Jot something down" / "Keep time for me")
 
-### F-3.1 Scratchpad (S)
+### F-3.1 Scratchpad (S) ✅
 - A small always-on-top `Window` with a `TextEdit`, autosaved to `user://notes.txt`.
 
-### F-3.2 Reminders from plain text (M)
+### F-3.2 Reminders from plain text (M) ✅
 - Typing "call mom at 18:30" or "meeting tomorrow 9am" in the scratchpad or a quick-add
   box creates a reminder.
 - Parse a small set of patterns: `HH:MM`, `at 6pm`, `in 20 min`, `tomorrow`, weekday
@@ -164,7 +166,7 @@ or from the tray.
 - A list view of reminders with edit and delete, repeat rules (daily, weekdays, weekly)
   and countdowns ("3 days until ...").
 
-### F-3.4 Timer and alarm (S)
+### F-3.4 Timer and alarm (S) ✅
 - Countdown timer and alarm from the Talk menu or tray. She announces when it fires.
   Use a `Timer` plus wall-clock checks so sleep and wake don't break it.
 

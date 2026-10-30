@@ -56,5 +56,14 @@
 	"snack_end": { "anim": "happy", "lines": ["That was fun! Thanks for chatting.", "Hehe, I like our snack breaks."] },
 
 	"mood_ask": ["How was your day?", "So, how are you doing today?"],
-	"mood_again": ["You already told me today. Feeling any different?"]
+	"mood_again": ["You already told me today. Feeling any different?"],
+
+	"reminder_set": ["Okay! I'll remind you {when}: {text}.", "Got it~ {when}: {text}."],
+	"timer_set": ["Timer started! I'll tell you {when}.", "Okay, {text}: starting now!"],
+	"alarm_set": ["Alarm set {when}. I'll make sure you're up!"],
+	"reminder_due": ["Reminder: {text}!", "Hey! Don't forget: {text}."],
+	"timer_done": ["Time's up! ({text})", "Ding~ your {text} is done!"],
+	"alarm_due": ["It's {time}! Time to get going~", "Alarm! It's {time}!"],
+	"upcoming_none": ["Nothing coming up. Want me to set a timer?"],
+	"reminders_cleared": ["Okay, all cleared!"]
 }
