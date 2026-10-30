@@ -4,7 +4,8 @@ extends Node
 ## Poking her face, chest or skirt too often in a short time makes her annoyed for a
 ## while, and every click gets a pout until it wears off; a headpat makes up for it.
 ## What she says (and the expression with it) comes from Dialogue: the triggers are
-## head, face, flustered, hands, annoyed, forgiven, pat, pat_end, first_pat, level_up.
+## head, face, flustered, hands, annoyed, forgiven, pat, pat_end, first_pat, level_up,
+## sleep_disturbed (a click while she sleeps) and woken_up (picked up while asleep).
 
 @export_group("Headpats")
 ## Strokes (direction changes) per affection point.
@@ -34,6 +35,7 @@ func _ready() -> void:
 	gestures.patted.connect(_on_patted)
 	gestures.pat_ended.connect(_on_pat_ended)
 	Affection.level_up.connect(_on_level_up)
+	_pet.get_node(^"StateMachine").state_changed.connect(_on_state_changed)
 
 
 func is_annoyed() -> bool:
@@ -43,6 +45,9 @@ func is_annoyed() -> bool:
 func _on_clicked(position: Vector2) -> void:
 	if _pet.announcer.is_active():
 		_pet.bubble.hide_message() # Clicking her dismisses a reminder too.
+		return
+	if _pet.state_machine.current_state.name == PetStateMachine.SLEEPING:
+		_pet.say_line(&"sleep_disturbed") # Only half wakes up.
 		return
 	if is_annoyed():
 		_pet.say_line(&"annoyed")
@@ -110,6 +115,11 @@ func _on_pat_ended() -> void:
 
 func _on_level_up(_level: int) -> void:
 	_pet.say_line(&"level_up", 5.0)
+
+
+func _on_state_changed(from: StringName, to: StringName) -> void:
+	if from == PetStateMachine.SLEEPING and to == PetStateMachine.DRAGGED:
+		_pet.say_line(&"woken_up")
 
 
 func _now() -> float:

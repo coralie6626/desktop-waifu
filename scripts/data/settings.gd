@@ -19,6 +19,8 @@ func _defaults() -> Dictionary[StringName, Variant]:
 		&"audio/sfx_volume": 1.0,
 		# "HH:MM", 24-hour clock. Empty disables the sleep schedule.
 		&"schedule/bedtime": "23:00",
+		# "HH:MM", when she wakes up after a night's sleep.
+		&"schedule/wake_time": "07:00",
 		# Minutes between rest reminders; 0 turns them off.
 		&"schedule/rest_reminder_minutes": 0,
 		&"wardrobe/outfit": "default",

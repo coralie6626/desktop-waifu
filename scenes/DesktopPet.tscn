@@ -17,6 +17,12 @@
 [ext_resource type="Script" path="res://scripts/talk/talk_menu.gd" id="15_talk"]
 [ext_resource type="Script" path="res://scripts/fsm/states/announce_state.gd" id="16_announce"]
 [ext_resource type="Script" path="res://scripts/pet/pet_announcer.gd" id="17_announcer"]
+[ext_resource type="Script" path="res://scripts/fsm/states/sleeping_state.gd" id="18_sleeping"]
+[ext_resource type="Script" path="res://scripts/fsm/states/watching_state.gd" id="19_watching"]
+[ext_resource type="Script" path="res://scripts/pet/zzz_effect.gd" id="20_zzz"]
+[ext_resource type="Script" path="res://scripts/pet/wardrobe.gd" id="21_wardrobe"]
+[ext_resource type="Script" path="res://scripts/pet/sleep_schedule.gd" id="22_schedule"]
+[ext_resource type="Script" path="res://scripts/pet/game_watcher.gd" id="23_games"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -39,6 +45,9 @@ script = ExtResource("1_pet")
 
 [node name="Sprite" type="SpineSprite" parent="."]
 skeleton_data_res = ExtResource("2_waifu")
+
+[node name="Zzz" type="Node2D" parent="."]
+script = ExtResource("20_zzz")
 
 [node name="SpeechBubble" type="PanelContainer" parent="."]
 visible = false
@@ -80,6 +89,12 @@ script = ExtResource("8_sitting")
 [node name="Announce" type="Node" parent="StateMachine"]
 script = ExtResource("16_announce")
 
+[node name="Sleeping" type="Node" parent="StateMachine"]
+script = ExtResource("18_sleeping")
+
+[node name="Watching" type="Node" parent="StateMachine"]
+script = ExtResource("19_watching")
+
 [node name="Perched" type="Node" parent="StateMachine"]
 script = ExtResource("9_perched")
 
@@ -103,3 +118,12 @@ script = ExtResource("15_talk")
 
 [node name="Announcer" type="Node" parent="."]
 script = ExtResource("17_announcer")
+
+[node name="SleepSchedule" type="Node" parent="."]
+script = ExtResource("22_schedule")
+
+[node name="Wardrobe" type="Node" parent="."]
+script = ExtResource("21_wardrobe")
+
+[node name="GameWatcher" type="Node" parent="."]
+script = ExtResource("23_games")

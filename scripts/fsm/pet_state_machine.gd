@@ -11,6 +11,8 @@ const DRAGGED := &"Dragged"
 const SITTING := &"Sitting"
 const PERCHED := &"Perched"
 const ANNOUNCE := &"Announce"
+const SLEEPING := &"Sleeping"
+const WATCHING := &"Watching"
 
 @export var initial_state: PetState
 

@@ -67,13 +67,15 @@ func pick(trigger: StringName) -> Dictionary:
 	return {"text": chosen.text, "anim": chosen.anim}
 
 
-## What conditions are tested against: time of day, affection level, mood, outfit.
+## What conditions are tested against: time of day, affection level, mood, outfit and
+## bedtime phase (day, wind_down, night).
 func current_context() -> Dictionary:
 	return {
 		"time": time_of_day(Time.get_datetime_dict_from_system().hour),
 		"level": Affection.get_level(),
 		"mood": Mood.today(),
 		"outfit": Settings.get_value(&"wardrobe/outfit"),
+		"phase": SleepSchedule.PHASE_NAMES[SleepSchedule.current_phase()],
 	}
 
 
@@ -94,7 +96,7 @@ static func matches(when: Dictionary, context: Dictionary) -> bool:
 			"memory":
 				if not SaveData.get_value(&"talk/memories").has(want):
 					return false
-			"time", "mood", "outfit":
+			"time", "mood", "outfit", "phase":
 				var options: Array = want if want is Array else [want]
 				if not options.has(context.get(key)):
 					return false

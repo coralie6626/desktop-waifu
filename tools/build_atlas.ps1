@@ -32,7 +32,7 @@ $tongue = Color 255 150 150
 $blushFill = Color 255 120 135 120
 $blushLine = Color 235 95 110 200
 
-$sheet = New-Object System.Drawing.Bitmap 512, 256, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$sheet = New-Object System.Drawing.Bitmap 512, 512, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $g = [System.Drawing.Graphics]::FromImage($sheet)
 $g.Clear([System.Drawing.Color]::Transparent)
 $base = [System.Drawing.Bitmap]::FromFile($basePath)
@@ -145,12 +145,100 @@ $g.DrawArc((Pen $outline 1.4), $x + 34, $y + 16, 11, 7, 0, 180)
 $g.DrawArc((Pen $outline 1.4), $x + 43, $y + 10, 6, 7, 270, 180) # handle
 Add-Region 'snack' $x $y 52 26
 
+# --- Wardrobe: pajamas, nightcap, glasses ------------------------------------------
+$pjBlue = Color 168 204 240
+$pjLight = Color 214 232 250
+$star = Color 255 246 190
+$capBlue = Color 120 160 220
+
+# Pajama top: replaces the dress bodice (same 44x46 cell as "torso").
+$x = 0; $y = 220
+$top = New-Object System.Drawing.Drawing2D.GraphicsPath
+$top.AddLines([System.Drawing.PointF[]]@(
+	(New-Object System.Drawing.PointF ($x + 6), ($y + 4)), (New-Object System.Drawing.PointF ($x + 38), ($y + 4)),
+	(New-Object System.Drawing.PointF ($x + 42), ($y + 44)), (New-Object System.Drawing.PointF ($x + 2), ($y + 44))))
+$top.CloseFigure()
+$g.FillPath((Brush $pjBlue), $top)
+$g.DrawPath((Pen $outline 2), $top)
+$g.FillPie((Brush $pjLight), $x + 12, $y - 4, 20, 16, 0, 180) # Collar.
+$g.DrawArc((Pen $outline 1.6), $x + 12, $y - 4, 20, 16, 0, 180)
+foreach ($s in @(@(10, 18), @(30, 24), @(16, 34), @(34, 38), @(22, 26))) { $g.FillEllipse((Brush $star), $x + $s[0] - 2.5, $y + $s[1] - 2.5, 5, 5) }
+foreach ($b in @(16, 26, 36)) { $g.FillEllipse((Brush $white), $x + 21, $y + $b - 1.5, 3, 3) } # Buttons.
+Add-Region 'pj_top' $x $y 44 46
+
+# Pajama shorts: replace the skirt.
+$x = 48; $y = 220
+$g.FillRectangle((Brush $pjBlue), $x + 6, $y + 2, 48, 14)
+$g.FillPolygon((Brush $pjBlue), [System.Drawing.PointF[]]@(
+	(New-Object System.Drawing.PointF ($x + 6), ($y + 14)), (New-Object System.Drawing.PointF ($x + 29), ($y + 14)),
+	(New-Object System.Drawing.PointF ($x + 27), ($y + 28)), (New-Object System.Drawing.PointF ($x + 4), ($y + 28))))
+$g.FillPolygon((Brush $pjBlue), [System.Drawing.PointF[]]@(
+	(New-Object System.Drawing.PointF ($x + 31), ($y + 14)), (New-Object System.Drawing.PointF ($x + 54), ($y + 14)),
+	(New-Object System.Drawing.PointF ($x + 56), ($y + 28)), (New-Object System.Drawing.PointF ($x + 33), ($y + 28))))
+$g.FillRectangle((Brush $pjLight), $x + 4, $y + 24, 23, 4)
+$g.FillRectangle((Brush $pjLight), $x + 33, $y + 24, 23, 4)
+$g.DrawLines((Pen $outline 2), [System.Drawing.PointF[]]@(
+	(New-Object System.Drawing.PointF ($x + 6), ($y + 2)), (New-Object System.Drawing.PointF ($x + 54), ($y + 2)),
+	(New-Object System.Drawing.PointF ($x + 56), ($y + 28)), (New-Object System.Drawing.PointF ($x + 33), ($y + 28)),
+	(New-Object System.Drawing.PointF ($x + 30), ($y + 15)), (New-Object System.Drawing.PointF ($x + 27), ($y + 28)),
+	(New-Object System.Drawing.PointF ($x + 4), ($y + 28)), (New-Object System.Drawing.PointF ($x + 6), ($y + 2))))
+foreach ($s in @(@(14, 9), @(44, 8), @(30, 7))) { $g.FillEllipse((Brush $star), $x + $s[0] - 2.5, $y + $s[1] - 2.5, 5, 5) }
+Add-Region 'pj_shorts' $x $y 60 30
+
+# Nightcap: a floppy cone flopping to the right, with a band and a pompom.
+$x = 112; $y = 220
+$cap = New-Object System.Drawing.Drawing2D.GraphicsPath
+$cap.AddBezier(($x + 6), ($y + 46), ($x + 8), ($y + 14), ($x + 30), ($y + 2), ($x + 54), ($y + 14))
+$cap.AddBezier(($x + 54), ($y + 14), ($x + 40), ($y + 14), ($x + 50), ($y + 34), ($x + 58), ($y + 46))
+$cap.CloseFigure()
+$g.FillPath((Brush $capBlue), $cap)
+$g.DrawPath((Pen $outline 2), $cap)
+foreach ($s in @(@(24, 26), @(36, 18), @(44, 34))) { $g.FillEllipse((Brush $star), $x + $s[0] - 2.5, $y + $s[1] - 2.5, 5, 5) }
+$g.FillRectangle((Brush $white), $x + 3, $y + 42, 58, 11)
+$g.DrawRectangle((Pen $outline 2), $x + 3, $y + 42, 58, 11)
+$g.FillEllipse((Brush $white), $x + 50, $y + 8, 12, 12)
+$g.DrawEllipse((Pen $outline 1.6), $x + 50, $y + 8, 12, 12)
+Add-Region 'nightcap' $x $y 64 56
+
+# Round glasses: two frames over the eye centres and a bridge.
+$x = 180; $y = 220
+$lens = Color 255 255 255 60
+foreach ($c in @(14.5, 42.5)) {
+	$g.FillEllipse((Brush $lens), $x + $c - 10, $y + 1, 20, 18)
+	$g.DrawEllipse((Pen $outline 2), $x + $c - 10, $y + 1, 20, 18)
+}
+$g.DrawArc((Pen $outline 2), $x + 24, $y + 6, 8, 6, 200, 140)
+Add-Region 'glasses_round' $x $y 56 20
+
+# --- Bedding: pillow and blanket ------------------------------------------------------
+$x = 240; $y = 220
+$g.FillEllipse((Brush (Color 250 248 255)), $x + 2, $y + 4, 80, 24)
+$g.DrawEllipse((Pen $outline 2), $x + 2, $y + 4, 80, 24)
+$g.DrawArc((Pen (Color 200 190 220) 1.4), $x + 14, $y + 10, 56, 12, 200, 140)
+Add-Region 'pillow' $x $y 84 30
+
+$x = 0; $y = 280
+$quilt = Color 255 222 140
+$rect = New-Object System.Drawing.Drawing2D.GraphicsPath
+$rect.AddArc(($x + 2), ($y + 4), 20, 20, 180, 90)
+$rect.AddArc(($x + 102), ($y + 4), 20, 20, 270, 90)
+$rect.AddLine(($x + 122), ($y + 66), ($x + 2), ($y + 66))
+$rect.CloseFigure()
+$g.FillPath((Brush $quilt), $rect)
+$g.SetClip($rect)
+for ($dx = 10; $dx -lt 124; $dx += 18) { for ($dy = 18; $dy -lt 68; $dy += 16) { $g.FillEllipse((Brush (Color 255 170 180)), $x + $dx + (($dy / 16) % 2) * 9 - 3, $y + $dy - 3, 6, 6) } }
+$g.ResetClip()
+$g.FillRectangle((Brush (Color 255 246 220)), $x + 3, $y + 6, 118, 9) # Folded-over top.
+$g.DrawLine((Pen (Color 220 180 110) 1.4), $x + 3, $y + 15, $x + 121, $y + 15)
+$g.DrawPath((Pen $outline 2), $rect)
+Add-Region 'blanket' $x $y 124 68
+
 $g.Dispose()
 $sheet.Save((Join-Path $outDir 'waifu.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $sheet.Dispose()
 
 $atlas = [System.Text.StringBuilder]::new()
-[void]$atlas.Append("waifu.png`nsize: 512,256`nfilter: Linear,Linear`npma: false`n")
+[void]$atlas.Append("waifu.png`nsize: 512,512`nfilter: Linear,Linear`npma: false`n")
 foreach ($r in $regions) { [void]$atlas.Append("$($r[0])`nbounds: $($r[1]),$($r[2]),$($r[3]),$($r[4])`n") }
 [System.IO.File]::WriteAllText((Join-Path $outDir 'waifu.atlas'), $atlas.ToString())
 Write-Host "Wrote waifu.png and waifu.atlas with $($regions.Count) regions."

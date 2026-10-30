@@ -29,6 +29,9 @@ out or swapped for local equivalents.
 | Snack Time with daily topics, mood check-in (F-2.1, F-2.2) | ✅ | `SnackTime`, `Mood`, `data/talk/` |
 | Scratchpad window saved to `user://notes.txt` (F-3.1) | ✅ | `NotesWindow`, `Desk` autoload |
 | Reminders from plain text; timers and alarms; she walks out and announces them (F-3.2, F-3.4) | ✅ | `ReminderParser`, `Reminders` autoload, `PetAnnouncer`, `Announce` state |
+| Sleep schedule: pajamas and yawns before bedtime, asks to sleep, sleeps under a blanket until morning (F-4.2) | ✅ | `SleepSchedule`, `Sleeping` state, `ZzzEffect` |
+| Outfits as Spine skins combined at runtime: pajamas, nightcap, round glasses, bedding (F-5.1) | ✅ | `Wardrobe` |
+| Watches full-screen games lying on the taskbar; whitelist/blacklist (F-4.1) | ✅ | `GameWatcher`, `Watching` state, `WindowTracker.foreground` |
 | Settings and save data with live `changed(key)` updates (F-0.1) | ✅ | `Settings`, `SaveData` autoloads (`scripts/data/`) |
 | Move her across monitors | 🟡 | The overlay window only covers the current screen. See F-W3. |
 
@@ -189,7 +192,7 @@ or from the tray.
 
 ## Phase 4: Behaviour that reacts to context
 
-### F-4.1 Detect full-screen games and apps (M)
+### F-4.1 Detect full-screen games and apps (M) ✅
 - Extend the `WindowTracker` helper to report the foreground window's process name and
   whether it covers its whole monitor.
 - When a full-screen app is in front, she goes to a new `Watching` state: changes into
@@ -198,7 +201,7 @@ or from the tray.
 - A whitelist and blacklist of executables in Settings (F-S2), so a full-screen video
   player can be handled differently from a game.
 
-### F-4.2 Sleep schedule (M)
+### F-4.2 Sleep schedule (M) ✅
 - Bedtime set in Settings (F-S1). About 2 hours before, she changes into pajamas and
   starts yawning lines.
 - At bedtime she asks "Can I go to sleep?" with Yes or Stay up. If you choose Stay up,
@@ -223,7 +226,7 @@ or from the tray.
 
 ## Phase 5: Wardrobe
 
-### F-5.1 Outfits as Spine skins (M)
+### F-5.1 Outfits as Spine skins (M) ✅
 - Each cosmetic is a **Spine skin** that swaps attachments in its slots. Combine skins
   at runtime: base + outfit + hat + glasses (`SpineSkin.add_skin` through
   `SpineSprite`).
