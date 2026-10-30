@@ -11,6 +11,11 @@ const VERSION := 1
 func _defaults() -> Dictionary[StringName, Variant]:
 	return {
 		&"affection/points": 0,
+		# Daily gain cap bookkeeping (see Affection): the day it counts for, and the total.
+		&"affection/day": "",
+		&"affection/gained_today": 0,
+		# Unix time she was last running, to notice neglect.
+		&"affection/last_seen": 0,
 		# Snack Time topic ids that have been seen at least once.
 		&"talk/unlocked_topics": PackedStringArray(),
 		# Milestones and story events for the Memories gallery: {id: unix time unlocked}.
@@ -20,6 +25,16 @@ func _defaults() -> Dictionary[StringName, Variant]:
 		# Each reminder is a Dictionary; its fields are defined by the reminders feature.
 		&"tools/reminders": [],
 	}
+
+
+## Records a Memories-gallery entry the first time it happens; returns true if it's new.
+func unlock_memory(id: String) -> bool:
+	var memories: Dictionary = get_value(&"talk/memories")
+	if memories.has(id):
+		return false
+	memories[id] = int(Time.get_unix_time_from_system())
+	set_value(&"talk/memories", memories)
+	return true
 
 
 func _read() -> Dictionary:

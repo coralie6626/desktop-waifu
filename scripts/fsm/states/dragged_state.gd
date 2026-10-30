@@ -19,6 +19,7 @@ var _drop_queued := false
 func enter(msg: Dictionary = {}) -> void:
 	_grab_offset = msg.get("grab_offset", Vector2.ZERO)
 	_poll_left = 0.0
+	pet.stop_reaction()
 	if msg.get("falling", false):
 		# Deferred so we don't start another transition from inside this one.
 		_drop_queued = true
