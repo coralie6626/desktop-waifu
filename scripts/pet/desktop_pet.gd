@@ -52,6 +52,7 @@ var _anim_names: Dictionary[StringName, bool] = {}
 @onready var conversation: Conversation = $Conversation
 @onready var talk_menu: TalkMenu = $TalkMenu
 @onready var choice_menu: ChoiceMenu = $ChoiceMenu
+@onready var announcer: PetAnnouncer = $Announcer
 
 
 func _ready() -> void:
@@ -108,9 +109,10 @@ func set_shown(shown: bool) -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT if shown else Node.PROCESS_MODE_DISABLED
 
 
-## True while she's being patted or talked to: states hold still and skip idle chatter.
+## True while she's being patted, talked to or announcing a reminder: states hold
+## still and skip idle chatter.
 func is_busy() -> bool:
-	return gestures.is_patting() or conversation.is_running()
+	return gestures.is_patting() or conversation.is_running() or announcer.is_active()
 
 
 # --- Gestures (see PetGestures; clicks and pats go to PetReactions) ------------------
@@ -129,13 +131,13 @@ func say_message(text: String, duration: float = -1.0) -> void:
 	bubble.say_message(text, duration)
 
 
-## Says a line for `trigger` from Dialogue, with its reaction. Returns false if no line
-## fits right now.
-func say_line(trigger: StringName, duration: float = -1.0) -> bool:
+## Says a line for `trigger` from Dialogue, with its reaction; `args` fill {placeholders}.
+## Returns false if no line fits right now.
+func say_line(trigger: StringName, duration: float = -1.0, args: Dictionary = {}) -> bool:
 	var line := Dialogue.pick(trigger)
 	if line.is_empty():
 		return false
-	say_message(line.text, duration)
+	say_message(line.text.format(args) if not args.is_empty() else line.text, duration)
 	if line.anim != &"":
 		play_reaction(line.anim)
 	return true

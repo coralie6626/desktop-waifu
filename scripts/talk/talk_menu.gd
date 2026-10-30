@@ -2,9 +2,10 @@ class_name TalkMenu
 extends PopupMenu
 ## The Talk menu, opened by double-clicking her (or from her right-click menu). Its own
 ## OS window like the context menu, so it isn't clipped by the click region.
-## Snack Time and the mood check-in run as Conversations.
+## Snack Time and the mood check-in run as Conversations; the scratchpad and "Keep time
+## for me" open the Desk tools.
 
-enum Id { SNACK, MOOD, CHAT }
+enum Id { SNACK, MOOD, CHAT, NOTES }
 
 const MOOD_CHECKIN_PATH := "res://data/talk/mood_checkin.json"
 
@@ -17,13 +18,19 @@ func _ready() -> void:
 	add_item("Snack time", Id.SNACK)
 	add_item("How was your day?", Id.MOOD)
 	add_item("Say something", Id.CHAT)
+	add_separator()
+	add_item("Jot something down", Id.NOTES)
+	var time_menu := TimeMenu.new()
+	time_menu.pet = _pet
+	add_child(time_menu)
+	add_submenu_node_item("Keep time for me", time_menu)
 	id_pressed.connect(_on_id_pressed)
 	_conversation.action.connect(_on_action)
 
 
 ## Opens the menu at the cursor, with a little "yes?" from her.
 func open() -> void:
-	if _conversation.is_running():
+	if _pet.is_busy():
 		return
 	set_item_text(get_item_index(Id.SNACK), "Snack time (%d left today)" % SnackTime.remaining_today().size())
 	_pet.say_line(&"talk_open")
@@ -37,6 +44,8 @@ func _on_id_pressed(id: int) -> void:
 			start_snack_time()
 		Id.MOOD:
 			start_mood_check_in()
+		Id.NOTES:
+			Desk.open_notes()
 		Id.CHAT:
 			_pet.say_line(&"idle")
 

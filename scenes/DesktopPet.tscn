@@ -15,6 +15,8 @@
 [ext_resource type="Script" path="res://scripts/talk/conversation.gd" id="13_conversation"]
 [ext_resource type="Script" path="res://scripts/ui/choice_menu.gd" id="14_choices"]
 [ext_resource type="Script" path="res://scripts/talk/talk_menu.gd" id="15_talk"]
+[ext_resource type="Script" path="res://scripts/fsm/states/announce_state.gd" id="16_announce"]
+[ext_resource type="Script" path="res://scripts/pet/pet_announcer.gd" id="17_announcer"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bubble"]
 content_margin_left = 12.0
@@ -75,6 +77,9 @@ script = ExtResource("7_dragged")
 [node name="Sitting" type="Node" parent="StateMachine"]
 script = ExtResource("8_sitting")
 
+[node name="Announce" type="Node" parent="StateMachine"]
+script = ExtResource("16_announce")
+
 [node name="Perched" type="Node" parent="StateMachine"]
 script = ExtResource("9_perched")
 
@@ -95,3 +100,6 @@ script = ExtResource("13_conversation")
 
 [node name="TalkMenu" type="PopupMenu" parent="."]
 script = ExtResource("15_talk")
+
+[node name="Announcer" type="Node" parent="."]
+script = ExtResource("17_announcer")
